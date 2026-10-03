@@ -1,0 +1,199 @@
+-- ====================================================================
+-- SCHEMA SUPABASE: Les Private Ngaji Kak Arsil (arsiles)
+-- Jalankan skrip ini di menu: Supabase Dashboard -> SQL Editor -> New Query -> Run
+-- ====================================================================
+
+-- 1. Buat Tabel Pengaturan Website
+create table if not exists site_settings (
+  id text primary key default 'arsiles_main',
+  content jsonb not null,
+  updated_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+-- 2. Aktifkan Row Level Security (RLS)
+alter table site_settings enable row level security;
+
+-- 3. Hapus policy lama jika ada (untuk mencegah duplikasi)
+drop policy if exists "Allow public read access" on site_settings;
+drop policy if exists "Allow public update access" on site_settings;
+drop policy if exists "Allow public insert access" on site_settings;
+
+-- 4. Buat Kebijakan Akses (RLS Policies)
+-- Izinkan siapapun membaca data (agar pengunjung web bisa melihat harga & jadwal)
+create policy "Allow public read access"
+  on site_settings for select
+  using (true);
+
+-- Izinkan pembaruan data dari panel admin
+create policy "Allow public update access"
+  on site_settings for update
+  using (true);
+
+-- Izinkan penambahan data baru jika belum ada
+create policy "Allow public insert access"
+  on site_settings for insert
+  with check (true);
+
+-- 5. Masukkan Data Awal (Seed Data)
+insert into site_settings (id, content, updated_at)
+values (
+  'arsiles_main',
+  '{
+    "teacher": {
+      "name": "Kak Arsil",
+      "role": "Guru Muslimah Les Private Ngaji Home Visit",
+      "headline": "LES PRIVATE NGAJI HOME VISIT",
+      "tagline": "Belajar Ngaji Lebih Mudah & Nyaman di Rumah",
+      "subheadline": "Bimbingan mengaji privat dengan metode ramah anak, sabar, dan bertahap. Guru datang langsung ke rumah Anda dalam suasana belajar yang menyenangkan.",
+      "whatsapp": "6281234567890",
+      "call_to_action": "Yuk, ajak putra/putri Anda mendekatkan diri pada Al-Qur''an",
+      "area": "Area Layanan: Home Visit (Datang ke Rumah Murid)",
+      "admin_pin": "123456",
+      "profile": {
+        "greeting": "Assalamu''alaikum Ayah & Bunda! Saya Kak Arsil",
+        "bio": "Sebagai pengajar Al-Qur''an Muslimah, saya berdedikasi membimbing anak-anak belajar membaca Al-Qur''an dengan sabar, santun, dan telaten. Belajar di rumah sendiri membuat ananda merasa nyaman, fokus, dan gembira menyerap ilmu kalamullah.",
+        "avatar": "assets/kak-arsil-profile.jpg",
+        "specialties": [
+          "Metode Tilawati & Iqro Ramah Anak",
+          "Tahsin & Makharijul Huruf",
+          "Bimbingan Hafalan Juz 30 & Lanjutan",
+          "Calistung (Baca, Tulis, Hitung Usia Dini)"
+        ],
+        "teaching_values": [
+          {
+            "title": "Sabar & Lembut",
+            "desc": "Mendampingi anak dengan kasih sayang tanpa paksaan, sehingga anak merasa aman dan mencintai proses mengaji."
+          },
+          {
+            "title": "Belajar Sambil Bergembira",
+            "desc": "Menggunakan metode interaktif, pengenalan hijaiyah yang menyenangkan, serta apresiasi pencapaian hafalan."
+          },
+          {
+            "title": "Perkembangan Bertahap",
+            "desc": "Menyesuaikan kecepatan materi dengan daya tangkap masing-masing anak, dari mengenal huruf sampai lancar bertajwid."
+          },
+          {
+            "title": "Laporan ke Orang Tua",
+            "desc": "Memberikan catatan kemajuan belajar dan target hafalan secara transparan kepada orang tua setiap sesi."
+          }
+        ]
+      }
+    },
+    "packages": [
+      {
+        "id": "A",
+        "code": "Paket A",
+        "name": "Paket A",
+        "duration": "45 Menit",
+        "focus": "Fokus Pembelajaran",
+        "description": "Ngaji Al Qur''an Binnadzor & Bil Ghoib / Hafalan",
+        "highlight": "Cocok untuk melatih kelancaran membaca dan hafalan dasar secara intensif."
+      },
+      {
+        "id": "B",
+        "code": "Paket B",
+        "name": "Paket B",
+        "duration": "60 Menit",
+        "focus": "Fokus Pembelajaran",
+        "description": "Ngaji Al Qur''an Binnadzor & Bil Ghoib / Hafalan",
+        "highlight": "Durasi lebih leluasa untuk pemahaman tajwid, makharijul huruf, dan setor hafalan."
+      },
+      {
+        "id": "C",
+        "code": "Paket C",
+        "name": "Paket C",
+        "duration": "60 Menit",
+        "focus": "Fokus Pembelajaran",
+        "description": "Ngaji Binnadzor & Bil Ghoib / Hafalan + Calistung",
+        "highlight": "Kombinasi belajar mengaji serta bimbingan membaca, menulis, dan berhitung (khusus usia dini & SD dasar)."
+      }
+    ],
+    "levels": [
+      {
+        "id": "pra_tk",
+        "title": "Jenjang Pra TK / TK",
+        "subtitle": "Usia Dini & Pengenalan Huruf",
+        "badge": "Pra TK & TK",
+        "rates": [
+          { "package": "Paket A", "duration": "45 Menit", "price": 20000, "price_formatted": "Rp 20.000" },
+          { "package": "Paket B", "duration": "60 Menit", "price": 25000, "price_formatted": "Rp 25.000" },
+          { "package": "Paket C", "duration": "60 Menit (Termasuk Calistung)", "price": 30000, "price_formatted": "Rp 30.000" }
+        ]
+      },
+      {
+        "id": "sd_mi",
+        "title": "Jenjang SD / MI",
+        "subtitle": "Tingkat Dasar & Hafalan",
+        "badge": "SD / MI",
+        "rates": [
+          { "package": "Paket A", "duration": "45 Menit", "price": 30000, "price_formatted": "Rp 30.000" },
+          { "package": "Paket B", "duration": "60 Menit", "price": 35000, "price_formatted": "Rp 35.000" },
+          { "package": "Paket C", "duration": "60 Menit (Termasuk Calistung)", "price": 40000, "price_formatted": "Rp 40.000" }
+        ]
+      },
+      {
+        "id": "smp_sma",
+        "title": "Jenjang SMP & SMA",
+        "subtitle": "Tingkat Lanjutan & Tahsin",
+        "badge": "SMP & SMA",
+        "rates": [
+          { "package": "Paket A", "duration": "45 Menit", "price": 40000, "price_formatted": "Rp 40.000" },
+          { "package": "Paket B", "duration": "60 Menit", "price": 45000, "price_formatted": "Rp 45.000" }
+        ]
+      }
+    ],
+    "schedule_info": {
+      "days": "Senin sampai Sabtu (Sesuai kesepakatan sesi)",
+      "times": "Sore hari / setelah Maghrib",
+      "note": "Tanggal merah / Weekend kondisional (dapat dikoordinasikan terlebih dahulu)"
+    },
+    "transport_fee_per_km": 3000,
+    "transport_note": "Tambahan biaya transport Rp 3.000 / km dari lokasi guru ke rumah murid",
+    "terms": [
+      {
+        "title": "Tidak Ada Biaya Pendaftaran",
+        "description": "Pendaftaran gratis tanpa biaya administrasi awal."
+      },
+      {
+        "title": "Metode & Buku Panduan",
+        "description": "Pembelajaran menggunakan Tilawati, Iqro, Juz Amma, atau Al-Qur''an sesuai kemampuan anak."
+      },
+      {
+        "title": "Target Hafalan Juz 30",
+        "description": "Bimbingan hafalan surat pendek Juz Amma (Juz 30) dengan makhraj yang benar."
+      },
+      {
+        "title": "Menghafal Juz 1 sampai 15",
+        "description": "Program hafalan lanjutan juz 1 sampai 15 untuk jenjang SD hingga SMA."
+      },
+      {
+        "title": "Pilihan Fleksibel",
+        "description": "Orang tua bebas memilih Paket A (45m), Paket B (60m), atau Paket C (60m + Calistung)."
+      },
+      {
+        "title": "Waktu Belajar Nyaman",
+        "description": "Jadwal les dilaksanakan pada sore hari atau setelah waktu Maghrib."
+      },
+      {
+        "title": "Akhir Pekan & Hari Libur",
+        "description": "Jadwal pada tanggal merah atau weekend bersifat kondisional sesuai kesepakatan bersama."
+      },
+      {
+        "title": "Pengajar Guru Muslimah",
+        "description": "Diajar langsung oleh guru Muslimah yang ramah, santun, dan telaten menghadapi anak."
+      },
+      {
+        "title": "Pembayaran Per Pertemuan",
+        "description": "Sistem pembayaran dilakukan per sesi pertemuan sehingga transparan dan tidak memberatkan."
+      },
+      {
+        "title": "Biaya Transportasi Terjangkau",
+        "description": "Tambahan biaya transport dihitung transparan Rp 3.000 per kilometer jarak tempuh."
+      }
+    ]
+  }'::jsonb,
+  now()
+)
+on conflict (id) do update
+set content = excluded.content,
+    updated_at = now();

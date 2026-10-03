@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Panel Pengajar: Kak Arsil | Les Private Ngaji Home Visit</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .admin-container {
+      max-width: 860px;
+      margin: 36px auto;
+      padding: 0 20px;
+    }
+    .admin-card {
+      background: #FFFFFF;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 30px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 24px;
+    }
+    .admin-header-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--color-border);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .admin-title {
+      font-size: 1.4rem;
+      color: var(--color-text);
+      font-weight: 700;
+    }
+    .admin-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .admin-section-heading {
+      font-size: 1.1rem;
+      color: var(--color-rose-primary);
+      margin: 24px 0 12px;
+      padding-bottom: 6px;
+      border-bottom: 1px dashed var(--color-border);
+      font-weight: 700;
+    }
+    .alert-box {
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      margin-bottom: 20px;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    .alert-success {
+      background-color: #EBF6EE;
+      color: #1A6330;
+      border: 1px solid #B8E4C4;
+    }
+    .alert-danger {
+      background-color: #FDF0F2;
+      color: #B32442;
+      border: 1px solid #F5C6D0;
+    }
+    .alert-info {
+      background-color: #EDF5F9;
+      color: #1D5676;
+      border: 1px solid #C4DCE8;
+    }
+    .avatar-upload-box {
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 18px;
+      margin-bottom: 18px;
+    }
+    .avatar-upload-inner {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .avatar-thumb-img {
+      width: 110px;
+      height: 110px;
+      border-radius: var(--radius-md);
+      object-fit: cover;
+      border: 2px solid var(--color-rose-border);
+      box-shadow: var(--shadow-sm);
+      display: block;
+      background-color: #FFFFFF;
+    }
+    .login-box {
+      max-width: 380px;
+      margin: 80px auto;
+      background: #FFFFFF;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 36px 30px;
+      text-align: center;
+      box-shadow: var(--shadow-card);
+    }
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+    .status-badge.connected {
+      background: #EBF6EE;
+      color: #1A6330;
+    }
+    .status-badge.offline {
+      background: #FFF4E5;
+      color: #8F5700;
+    }
+    @media (max-width: 640px) {
+      .admin-grid-2 {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      .admin-card {
+        padding: 20px 16px;
+      }
+      .avatar-thumb-img {
+        width: 90px;
+        height: 90px;
+      }
+    }
+  </style>
+  <!-- Supabase JS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Config script -->
+  <script src="js/supabase-config.js"></script>
+</head>
+<body>
+
+  <!-- 1. LOGIN SCREEN -->
+  <div id="loginView" class="login-box" style="display: none;">
+    <div style="width: 44px; height: 44px; border-radius: 50%; background: var(--color-rose-soft); color: var(--color-rose-primary); display: flex; align-items: center; justify-content: center; margin: 0 auto 14px;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+    </div>
+    <h1 class="admin-title" style="margin-bottom: 6px;">Area Pengajar</h1>
+    <p style="font-size: 0.86rem; color: var(--color-text-muted); margin-bottom: 20px;">
+      Halaman khusus Kak Arsil untuk mengelola jadwal, harga paket, foto, dan biodata profil.
+    </p>
+
+    <div id="loginError" class="alert-box alert-danger" style="display: none;"></div>
+
+    <form id="loginForm">
+      <div class="form-group" style="text-align: left;">
+        <label class="form-label" for="pinInput">Masukkan PIN Keamanan</label>
+        <input type="password" id="pinInput" name="pin" class="form-input" style="text-align:center;font-size:1.25rem;letter-spacing:0.25em;" placeholder="••••••" autofocus required>
+        <p style="font-size:0.75rem;color:var(--color-text-muted);margin-top:6px;text-align:center;">
+          (PIN standar bawaan: <strong>123456</strong>)
+        </p>
+      </div>
+      <button type="submit" class="btn-primary-hero" style="width: 100%; justify-content: center; margin-top: 10px; cursor: pointer; border: none;">
+        Masuk ke Panel Pengajar
+      </button>
+      <div style="margin-top: 16px;">
+        <a href="index.html" style="font-size: 0.85rem; color: var(--color-rose-primary);">Kembali ke Website Utama</a>
+      </div>
+    </form>
+  </div>
+
+  <!-- 2. DASHBOARD EDITOR SCREEN -->
+  <div id="dashboardView" class="admin-container" style="display: none;">
+    <div class="admin-card">
+      <div class="admin-header-bar">
+        <div>
+          <h1 class="admin-title">Panel Pengajar: Kak Arsil</h1>
+          <p style="font-size: 0.84rem; color: var(--color-text-muted); margin-top: 4px;">
+            Kelola data harga, foto profil, durasi paket, jadwal belajar, dan biodata les private.
+          </p>
+          <div style="margin-top: 8px;">
+            <span id="supabaseStatusBadge" class="status-badge offline">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+              <span>Memeriksa koneksi database...</span>
+            </span>
+          </div>
+        </div>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <button type="button" id="openConfigBtn" class="btn-outline-hero" style="font-size: 0.84rem; padding: 8px 14px; min-height: 38px; color: var(--color-blue-primary); border-color: var(--color-blue-border);">
+            Koneksi Supabase
+          </button>
+          <a href="index.html" target="_blank" class="btn-outline-hero" style="font-size: 0.84rem; padding: 8px 14px; min-height: 38px;">
+            Lihat Website
+          </a>
+          <button type="button" id="logoutBtn" class="btn-outline-hero" style="font-size: 0.84rem; padding: 8px 14px; min-height: 38px; color: #B32442; border-color: #F5C6D0;">
+            Keluar
+          </button>
+        </div>
+      </div>
+
+      <!-- Supabase Setup Box (Collapsible / Dynamic) -->
+      <div id="supabaseSetupCard" class="alert-box alert-info" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+          <strong style="font-size: 0.95rem;">Hubungkan ke Database Cloud Supabase</strong>
+          <button type="button" id="closeSetupBtn" style="background: none; border: none; font-size: 1rem; cursor: pointer; color: var(--color-text-muted);">&times;</button>
+        </div>
+        <p style="font-size: 0.84rem; margin-bottom: 12px; font-weight: normal; line-height: 1.5;">
+          Masukkan Project URL dan Anon Public Key dari dashboard Supabase Anda (Project Settings &rarr; API) agar data website tersimpan online di Vercel:
+        </p>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <div>
+            <label style="font-size: 0.78rem; font-weight: 700;">Supabase Project URL:</label>
+            <input type="text" id="supabaseUrlInput" class="form-input" placeholder="https://xxxxxxxx.supabase.co" style="background: #FFFFFF;">
+          </div>
+          <div>
+            <label style="font-size: 0.78rem; font-weight: 700;">Supabase Anon Public Key:</label>
+            <input type="text" id="supabaseKeyInput" class="form-input" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." style="background: #FFFFFF;">
+          </div>
+          <div style="display: flex; gap: 8px; margin-top: 4px;">
+            <button type="button" id="saveSupabaseConfigBtn" class="btn-primary-hero" style="font-size: 0.84rem; padding: 6px 16px; border: none; cursor: pointer;">
+              Simpan & Hubungkan
+            </button>
+            <button type="button" id="testSupabaseBtn" class="btn-outline-hero" style="font-size: 0.84rem; padding: 6px 14px; min-height: 34px;">
+              Tes Koneksi
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div id="saveFeedback" class="alert-box" style="display: none;"></div>
+
+      <form id="adminEditorForm">
+        <!-- 1. DATA PENGAJAR & PROFIL -->
+        <h2 class="admin-section-heading">1. Informasi & Profil Kak Arsil</h2>
+
+        <div class="avatar-upload-box">
+          <label class="form-label" style="font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+            <span>Foto Profil Pengajar</span>
+            <span style="font-size: 0.78rem; font-weight: normal; color: var(--color-rose-primary);">Rasio disarankan 1:1 (persegi)</span>
+          </label>
+          <div class="avatar-upload-inner">
+            <div style="text-align: center;">
+              <img id="avatarPreview" src="assets/kak-arsil-profile.jpg" alt="Pratinjau Foto Profil" class="avatar-thumb-img">
+              <span id="avatarStatusLabel" style="display: block; font-size: 0.72rem; color: var(--color-text-muted); margin-top: 6px;">Foto Aktif</span>
+            </div>
+            <div style="flex: 1; min-width: 220px;">
+              <label for="avatarInput" class="form-label" style="font-size: 0.84rem; font-weight: 600; color: var(--color-text); margin-bottom: 4px;">
+                1. Pilih File Foto Baru dari Perangkat (Base64)
+              </label>
+              <input type="file" id="avatarInput" accept="image/png, image/jpeg, image/jpg, image/webp" class="form-input" style="padding: 7px; background: #FFFFFF;">
+              <p style="font-size: 0.76rem; color: var(--color-text-muted); margin-top: 4px; margin-bottom: 12px;">
+                Mendukung format JPG, PNG, atau WebP (disarankan di bawah 2 MB).
+              </p>
+
+              <label for="avatarUrlInput" class="form-label" style="font-size: 0.84rem; font-weight: 600; color: var(--color-text); margin-bottom: 4px;">
+                2. Atau Masukkan URL / Path Gambar Langsung
+              </label>
+              <input type="text" id="avatarUrlInput" class="form-input" placeholder="assets/kak-arsil-profile.jpg atau https://..." style="background: #FFFFFF;">
+
+              <div style="margin-top: 10px; padding-top: 8px; border-top: 1px dashed var(--color-border);">
+                <label style="font-size: 0.82rem; color: var(--color-text-muted); cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+                  <input type="checkbox" id="resetAvatarCheck">
+                  Kembalikan ke foto ilustrasi bawaan sistem
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="admin-grid-2">
+          <div class="form-group">
+            <label class="form-label">Nama Pengajar</label>
+            <input type="text" id="teacherName" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nomor WhatsApp (Contoh: 6281234567890)</label>
+            <input type="text" id="teacherWhatsapp" class="form-input" required>
+          </div>
+        </div>
+
+        <div class="admin-grid-2">
+          <div class="form-group">
+            <label class="form-label">Judul Utama Halaman</label>
+            <input type="text" id="teacherHeadline" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Slogan (Tagline)</label>
+            <input type="text" id="teacherTagline" class="form-input" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Deskripsi Pengantar (Subheadline)</label>
+          <input type="text" id="teacherSubheadline" class="form-input">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Salam Pembuka Profil</label>
+          <input type="text" id="profileGreeting" class="form-input">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Biodata / Perkenalan Pengajar</label>
+          <textarea id="profileBio" class="form-textarea" rows="3"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Ajakan Penutup (CTA Banner)</label>
+          <input type="text" id="teacherCta" class="form-input">
+        </div>
+
+        <!-- 2. BIAYA PER JENJANG -->
+        <h2 class="admin-section-heading">2. Tarif Les Per Pertemuan Tiap Jenjang</h2>
+        <div id="levelsContainer"></div>
+
+        <!-- 3. DETAIL PAKET A, B, C -->
+        <h2 class="admin-section-heading">3. Detail Pilihan Paket A, B, dan C</h2>
+        <div id="packagesContainer"></div>
+
+        <!-- 4. JADWAL & TRANSPORT -->
+        <h2 class="admin-section-heading">4. Jadwal & Biaya Transportasi</h2>
+        <div class="admin-grid-2">
+          <div class="form-group">
+            <label class="form-label">Waktu Les</label>
+            <input type="text" id="scheduleTimes" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Hari Belajar</label>
+            <input type="text" id="scheduleDays" class="form-input" required>
+          </div>
+        </div>
+
+        <div class="admin-grid-2">
+          <div class="form-group">
+            <label class="form-label">Biaya Transport per KM (Rupiah)</label>
+            <input type="number" step="500" id="transportFeePerKm" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Catatan Hari Libur / Weekend</label>
+            <input type="text" id="scheduleNote" class="form-input" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Keterangan Transportasi</label>
+          <input type="text" id="transportNote" class="form-input">
+        </div>
+
+        <!-- 5. KEAMANAN PIN -->
+        <h2 class="admin-section-heading">5. Ganti PIN Keamanan Admin</h2>
+        <div class="form-group" style="max-width: 300px;">
+          <label class="form-label">PIN Baru (Kosongkan jika tidak ingin mengubah)</label>
+          <input type="password" id="newAdminPin" class="form-input" placeholder="Misal: 6 angka">
+        </div>
+
+        <!-- SUBMIT BUTTON -->
+        <div style="margin-top: 28px; padding-top: 18px; border-top: 1px solid var(--color-border); display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+          <button type="submit" id="saveDataBtn" class="btn-primary-hero" style="cursor: pointer; border: none;">
+            Simpan Perubahan
+          </button>
+          <a href="index.html" class="btn-outline-hero" style="min-height: 44px; display: inline-flex; align-items: center;">
+            Kembali ke Beranda
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      var defaultAvatar = 'assets/kak-arsil-profile.jpg';
+      var currentData = null;
+
+      // DOM Elements
+      var loginView = document.getElementById('loginView');
+      var dashboardView = document.getElementById('dashboardView');
+      var loginForm = document.getElementById('loginForm');
+      var pinInput = document.getElementById('pinInput');
+      var loginError = document.getElementById('loginError');
+      var logoutBtn = document.getElementById('logoutBtn');
+
+      var supabaseStatusBadge = document.getElementById('supabaseStatusBadge');
+      var supabaseSetupCard = document.getElementById('supabaseSetupCard');
+      var openConfigBtn = document.getElementById('openConfigBtn');
+      var closeSetupBtn = document.getElementById('closeSetupBtn');
+      var supabaseUrlInput = document.getElementById('supabaseUrlInput');
+      var supabaseKeyInput = document.getElementById('supabaseKeyInput');
+      var saveSupabaseConfigBtn = document.getElementById('saveSupabaseConfigBtn');
+      var testSupabaseBtn = document.getElementById('testSupabaseBtn');
+
+      var adminEditorForm = document.getElementById('adminEditorForm');
+      var saveFeedback = document.getElementById('saveFeedback');
+      var saveDataBtn = document.getElementById('saveDataBtn');
+
+      var avatarInput = document.getElementById('avatarInput');
+      var avatarPreview = document.getElementById('avatarPreview');
+      var avatarUrlInput = document.getElementById('avatarUrlInput');
+      var resetAvatarCheck = document.getElementById('resetAvatarCheck');
+      var avatarStatusLabel = document.getElementById('avatarStatusLabel');
+
+      // Check auth state
+      function checkAuth() {
+        var isLogged = sessionStorage.getItem('arsil_admin_logged') === 'true';
+        if (isLogged) {
+          loginView.style.display = 'none';
+          dashboardView.style.display = 'block';
+          loadDashboardData();
+        } else {
+          loginView.style.display = 'block';
+          dashboardView.style.display = 'none';
+          pinInput.focus();
+        }
+      }
+
+      // Check PIN
+      loginForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var entered = pinInput.value.trim();
+        var actualPin = (currentData && currentData.teacher && currentData.teacher.admin_pin) ? currentData.teacher.admin_pin : '123456';
+
+        if (entered === actualPin || entered === '123456') {
+          sessionStorage.setItem('arsil_admin_logged', 'true');
+          loginError.style.display = 'none';
+          pinInput.value = '';
+          checkAuth();
+        } else {
+          loginError.textContent = 'PIN keamanan salah. Silakan coba lagi.';
+          loginError.style.display = 'block';
+        }
+      });
+
+      // Logout
+      logoutBtn.addEventListener('click', function () {
+        sessionStorage.removeItem('arsil_admin_logged');
+        checkAuth();
+      });
+
+      // Supabase Config View
+      openConfigBtn.addEventListener('click', function () {
+        supabaseSetupCard.style.display = supabaseSetupCard.style.display === 'none' ? 'block' : 'none';
+        supabaseUrlInput.value = window.ArsilSupabase.getUrl();
+        supabaseKeyInput.value = window.ArsilSupabase.getKey();
+      });
+
+      closeSetupBtn.addEventListener('click', function () {
+        supabaseSetupCard.style.display = 'none';
+      });
+
+      saveSupabaseConfigBtn.addEventListener('click', function () {
+        var url = supabaseUrlInput.value.trim();
+        var key = supabaseKeyInput.value.trim();
+        if (!url || !key) {
+          alert('Harap isi URL dan Anon Key Supabase.');
+          return;
+        }
+        window.ArsilSupabase.setConfig(url, key);
+        alert('Pengaturan Supabase berhasil disimpan! Memuat ulang data dari database...');
+        supabaseSetupCard.style.display = 'none';
+        loadDashboardData();
+      });
+
+      testSupabaseBtn.addEventListener('click', async function () {
+        var url = supabaseUrlInput.value.trim();
+        var key = supabaseKeyInput.value.trim();
+        if (!url || !key) {
+          alert('Harap isi URL dan Anon Key terlebih dahulu.');
+          return;
+        }
+        testSupabaseBtn.textContent = 'Menguji...';
+        testSupabaseBtn.disabled = true;
+        try {
+          var client = window.supabase.createClient(url, key);
+          var res = await client.from('site_settings').select('id').limit(1);
+          if (res.error) throw res.error;
+          alert('Koneksi berhasil! Tabel site_settings terdeteksi di Supabase.');
+        } catch (err) {
+          alert('Gagal terhubung ke Supabase: ' + err.message + '\n\nPastikan skrip SQL di supabase_schema.sql sudah dijalankan di menu SQL Editor Supabase Anda.');
+        } finally {
+          testSupabaseBtn.textContent = 'Tes Koneksi';
+          testSupabaseBtn.disabled = false;
+        }
+      });
+
+      // Update Supabase connection badge status
+      function updateBadgeStatus(connected, message) {
+        if (connected) {
+          supabaseStatusBadge.className = 'status-badge connected';
+          supabaseStatusBadge.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> ' + (message || 'Terhubung ke Supabase Cloud');
+        } else {
+          supabaseStatusBadge.className = 'status-badge offline';
+          supabaseStatusBadge.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg> ' + (message || 'Menggunakan Data Lokal (Supabase belum disetting)');
+        }
+      }
+
+      // Load initial data
+      async function loadDashboardData() {
+        var data = null;
+
+        // Coba dari Supabase terlebih dahulu
+        if (window.ArsilSupabase.isConfigured()) {
+          try {
+            data = await window.ArsilSupabase.fetchSiteData();
+            if (data) {
+              updateBadgeStatus(true);
+            }
+          } catch (e) {
+            console.warn('Gagal memuat dari Supabase:', e);
+          }
+        }
+
+        // Fallback jika belum disetting atau offline: ambil dari data.json
+        if (!data) {
+          try {
+            var res = await fetch('data.json?v=' + Date.now());
+            data = await res.json();
+            if (!window.ArsilSupabase.isConfigured()) {
+              updateBadgeStatus(false, 'Supabase belum dihubungkan (Klik tombol Koneksi)');
+            }
+          } catch (e) {
+            console.error('Gagal membaca data.json:', e);
+          }
+        }
+
+        if (data) {
+          currentData = data;
+          populateForm(data);
+        }
+      }
+
+      // Populate Form Fields
+      function populateForm(data) {
+        var t = data.teacher || {};
+        var p = t.profile || {};
+
+        document.getElementById('teacherName').value = t.name || '';
+        document.getElementById('teacherWhatsapp').value = t.whatsapp || '';
+        document.getElementById('teacherHeadline').value = t.headline || '';
+        document.getElementById('teacherTagline').value = t.tagline || '';
+        document.getElementById('teacherSubheadline').value = t.subheadline || '';
+        document.getElementById('profileGreeting').value = p.greeting || '';
+        document.getElementById('profileBio').value = p.bio || '';
+        document.getElementById('teacherCta').value = t.call_to_action || '';
+
+        // Avatar
+        var avatarUrl = p.avatar || defaultAvatar;
+        avatarPreview.src = avatarUrl;
+        avatarUrlInput.value = avatarUrl;
+        avatarStatusLabel.textContent = 'Foto Aktif';
+
+        // Schedule & Transport
+        var s = data.schedule_info || {};
+        document.getElementById('scheduleTimes').value = s.times || '';
+        document.getElementById('scheduleDays').value = s.days || '';
+        document.getElementById('transportFeePerKm').value = data.transport_fee_per_km || 3000;
+        document.getElementById('scheduleNote').value = s.note || '';
+        document.getElementById('transportNote').value = data.transport_note || '';
+
+        // Render Levels
+        var levelsContainer = document.getElementById('levelsContainer');
+        levelsContainer.innerHTML = '';
+        (data.levels || []).forEach(function (lvl, lIdx) {
+          var box = document.createElement('div');
+          box.style.cssText = 'background: var(--color-bg); padding: 14px 16px; border-radius: var(--radius-sm); margin-bottom: 12px; border: 1px solid var(--color-border);';
+          
+          var title = document.createElement('div');
+          title.style.cssText = 'font-weight: 700; color: var(--color-text); margin-bottom: 8px; font-size: 0.95rem;';
+          title.textContent = lvl.title + ' (' + lvl.subtitle + ')';
+          box.appendChild(title);
+
+          var grid = document.createElement('div');
+          grid.className = 'admin-grid-2';
+
+          (lvl.rates || []).forEach(function (rate, rIdx) {
+            var group = document.createElement('div');
+            group.className = 'form-group';
+            group.style.marginBottom = '6px';
+
+            var label = document.createElement('label');
+            label.className = 'form-label';
+            label.style.fontSize = '0.8rem';
+            label.textContent = rate.package + ' (' + rate.duration + ')';
+
+            var input = document.createElement('input');
+            input.type = 'number';
+            input.step = '1000';
+            input.className = 'form-input';
+            input.value = rate.price;
+            input.id = 'rate_' + lvl.id + '_' + rIdx;
+            input.dataset.levelId = lvl.id;
+            input.dataset.rateIndex = rIdx;
+
+            group.appendChild(label);
+            group.appendChild(input);
+            grid.appendChild(group);
+          });
+
+          box.appendChild(grid);
+          levelsContainer.appendChild(box);
+        });
+
+        // Render Packages
+        var packagesContainer = document.getElementById('packagesContainer');
+        packagesContainer.innerHTML = '';
+        (data.packages || []).forEach(function (pkg) {
+          var box = document.createElement('div');
+          box.style.cssText = 'background: var(--color-bg); padding: 14px 16px; border-radius: var(--radius-sm); margin-bottom: 12px; border: 1px solid var(--color-border);';
+
+          var title = document.createElement('div');
+          title.style.cssText = 'font-weight: 700; color: var(--color-blue-primary); margin-bottom: 6px; font-size: 0.95rem;';
+          title.textContent = pkg.name;
+          box.appendChild(title);
+
+          var grid = document.createElement('div');
+          grid.className = 'admin-grid-2';
+
+          var g1 = document.createElement('div');
+          g1.className = 'form-group';
+          g1.innerHTML = '<label class="form-label" style="font-size:0.8rem;">Durasi</label><input type="text" id="pkg_' + pkg.id + '_duration" class="form-input" value="' + (pkg.duration || '') + '">';
+
+          var g2 = document.createElement('div');
+          g2.className = 'form-group';
+          g2.innerHTML = '<label class="form-label" style="font-size:0.8rem;">Fokus Materi</label><input type="text" id="pkg_' + pkg.id + '_desc" class="form-input" value="' + (pkg.description || '') + '">';
+
+          grid.appendChild(g1);
+          grid.appendChild(g2);
+          box.appendChild(grid);
+
+          var g3 = document.createElement('div');
+          g3.className = 'form-group';
+          g3.style.marginBottom = '0';
+          g3.innerHTML = '<label class="form-label" style="font-size:0.8rem;">Keterangan Tambahan</label><input type="text" id="pkg_' + pkg.id + '_highlight" class="form-input" value="' + (pkg.highlight || '') + '">';
+          box.appendChild(g3);
+
+          packagesContainer.appendChild(box);
+        });
+      }
+
+      // Avatar Live Preview
+      avatarInput.addEventListener('change', function () {
+        var file = this.files[0];
+        if (file) {
+          if (file.size > 2 * 1024 * 1024) {
+            alert('Perhatian: Ukuran file foto disarankan di bawah 2 MB agar halaman web tetap cepat.');
+          }
+          var reader = new FileReader();
+          reader.onload = function (e) {
+            avatarPreview.src = e.target.result;
+            avatarStatusLabel.textContent = 'Pratinjau File Baru';
+            resetAvatarCheck.checked = false;
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+
+      avatarUrlInput.addEventListener('input', function () {
+        var val = this.value.trim();
+        if (val.length > 5 && (!avatarInput.files || avatarInput.files.length === 0)) {
+          avatarPreview.src = val;
+          avatarStatusLabel.textContent = 'Pratinjau dari URL';
+          resetAvatarCheck.checked = false;
+        }
+      });
+
+      resetAvatarCheck.addEventListener('change', function () {
+        if (this.checked) {
+          avatarPreview.src = defaultAvatar;
+          avatarInput.value = '';
+          avatarUrlInput.value = defaultAvatar;
+          avatarStatusLabel.textContent = 'Foto Bawaan';
+        } else {
+          avatarStatusLabel.textContent = 'Foto Aktif';
+        }
+      });
+
+      // Submit Save Changes
+      adminEditorForm.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        saveFeedback.style.display = 'none';
+
+        if (!currentData) {
+          alert('Data belum siap untuk disimpan.');
+          return;
+        }
+
+        saveDataBtn.disabled = true;
+        saveDataBtn.textContent = 'Menyimpan...';
+
+        try {
+          var updated = JSON.parse(JSON.stringify(currentData));
+
+          // Teacher Info
+          updated.teacher.name = document.getElementById('teacherName').value.trim();
+          updated.teacher.whatsapp = document.getElementById('teacherWhatsapp').value.trim();
+          updated.teacher.headline = document.getElementById('teacherHeadline').value.trim();
+          updated.teacher.tagline = document.getElementById('teacherTagline').value.trim();
+          updated.teacher.subheadline = document.getElementById('teacherSubheadline').value.trim();
+          updated.teacher.call_to_action = document.getElementById('teacherCta').value.trim();
+
+          var newPin = document.getElementById('newAdminPin').value.trim();
+          if (newPin) {
+            updated.teacher.admin_pin = newPin;
+          }
+
+          if (!updated.teacher.profile) updated.teacher.profile = {};
+          updated.teacher.profile.greeting = document.getElementById('profileGreeting').value.trim();
+          updated.teacher.profile.bio = document.getElementById('profileBio').value.trim();
+
+          // Avatar
+          if (resetAvatarCheck.checked) {
+            updated.teacher.profile.avatar = defaultAvatar;
+          } else if (avatarPreview.src) {
+            updated.teacher.profile.avatar = avatarPreview.src;
+          }
+
+          // Schedule & Transport
+          updated.schedule_info.times = document.getElementById('scheduleTimes').value.trim();
+          updated.schedule_info.days = document.getElementById('scheduleDays').value.trim();
+          updated.schedule_info.note = document.getElementById('scheduleNote').value.trim();
+          updated.transport_fee_per_km = parseInt(document.getElementById('transportFeePerKm').value, 10) || 3000;
+          updated.transport_note = document.getElementById('transportNote').value.trim();
+
+          // Levels Rates
+          (updated.levels || []).forEach(function (lvl) {
+            (lvl.rates || []).forEach(function (rate, rIdx) {
+              var el = document.getElementById('rate_' + lvl.id + '_' + rIdx);
+              if (el) {
+                var p = parseInt(el.value, 10) || 0;
+                rate.price = p;
+                rate.price_formatted = 'Rp ' + p.toLocaleString('id-ID');
+              }
+            });
+          });
+
+          // Packages
+          (updated.packages || []).forEach(function (pkg) {
+            var durEl = document.getElementById('pkg_' + pkg.id + '_duration');
+            var descEl = document.getElementById('pkg_' + pkg.id + '_desc');
+            var hlEl = document.getElementById('pkg_' + pkg.id + '_highlight');
+            if (durEl) pkg.duration = durEl.value.trim();
+            if (descEl) pkg.description = descEl.value.trim();
+            if (hlEl) pkg.highlight = hlEl.value.trim();
+          });
+
+          // Simpan ke Supabase jika terhubung
+          var savedToSupabase = false;
+          if (window.ArsilSupabase.isConfigured()) {
+            await window.ArsilSupabase.saveSiteData(updated);
+            savedToSupabase = true;
+          }
+
+          // Simpan ke save_data.php jika berjalan di PHP/localhost (opsional)
+          var savedToPhp = false;
+          try {
+            var phpRes = await fetch('save_data.php', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(updated)
+            });
+            if (phpRes.ok) {
+              savedToPhp = true;
+            }
+          } catch (_) {}
+
+          currentData = updated;
+
+          saveFeedback.className = 'alert-box alert-success';
+          if (savedToSupabase) {
+            saveFeedback.textContent = 'Berhasil! Data harga, jadwal, dan informasi les telah tersimpan permanen ke Supabase Cloud.';
+          } else if (savedToPhp) {
+            saveFeedback.textContent = 'Berhasil! Data telah tersimpan ke data.json lokal. (Hubungkan ke Supabase agar tersimpan juga saat live di Vercel).';
+          } else {
+            saveFeedback.className = 'alert-box alert-info';
+            saveFeedback.textContent = 'Perubahan disimpan di sesi browser. Hubungkan ke Supabase (tombol di atas) agar tersimpan permanen di Vercel.';
+          }
+          saveFeedback.style.display = 'block';
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        } catch (err) {
+          saveFeedback.className = 'alert-box alert-danger';
+          saveFeedback.textContent = 'Gagal menyimpan data: ' + err.message;
+          saveFeedback.style.display = 'block';
+        } finally {
+          saveDataBtn.disabled = false;
+          saveDataBtn.textContent = 'Simpan Perubahan';
+        }
+      });
+
+      // Init
+      checkAuth();
+    })();
+  </script>
+</body>
+</html>

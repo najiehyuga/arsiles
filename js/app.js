@@ -66,19 +66,37 @@
     const [enteredPin, setEnteredPin] = useState('');
     const [pinError, setPinError] = useState(false);
 
-    // Fetch dynamic data if not embedded
+    // Fetch dynamic data: prioritaskan Supabase jika terhubung, fallback ke data.json
     useEffect(() => {
-      if (!window.INITIAL_DATA) {
-        fetch('data.json?v=' + Date.now())
-          .then((res) => res.json())
-          .then((json) => {
-            setData(json);
-            setLoading(false);
+      var isSupabaseReady = window.ArsilSupabase && window.ArsilSupabase.isConfigured();
+      if (isSupabaseReady) {
+        window.ArsilSupabase.fetchSiteData()
+          .then((cloudData) => {
+            if (cloudData && cloudData.teacher) {
+              setData(cloudData);
+              setLoading(false);
+              return;
+            }
+            fallbackFetch();
           })
-          .catch((err) => {
-            console.error('Gagal mengambil data.json:', err);
-            setLoading(false);
-          });
+          .catch(() => fallbackFetch());
+      } else {
+        fallbackFetch();
+      }
+
+      function fallbackFetch() {
+        if (!window.INITIAL_DATA) {
+          fetch('data.json?v=' + Date.now())
+            .then((res) => res.json())
+            .then((json) => {
+              setData(json);
+              setLoading(false);
+            })
+            .catch((err) => {
+              console.error('Gagal mengambil data.json:', err);
+              setLoading(false);
+            });
+        }
       }
     }, []);
 
@@ -180,7 +198,8 @@ Apakah jadwal Kak Arsil masih tersedia? Terima kasih.`;
       e.preventDefault();
       const actualPin = (data && data.teacher && data.teacher.admin_pin) ? data.teacher.admin_pin : '123456';
       if (enteredPin === actualPin || enteredPin === '123456') {
-        window.location.href = 'admin.php';
+        sessionStorage.setItem('arsil_admin_logged', 'true');
+        window.location.href = 'admin.html';
       } else {
         setPinError(true);
       }
