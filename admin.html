@@ -153,6 +153,82 @@
       cursor: pointer;
     }
 
+    /* Admin Dedicated Tab Navigation */
+    .admin-tabs-nav {
+      display: flex;
+      gap: 8px;
+      border-bottom: 2px solid var(--color-border);
+      margin-bottom: 24px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .admin-tabs-nav::-webkit-scrollbar {
+      display: none;
+    }
+    .admin-tab-btn {
+      background: none;
+      border: none;
+      padding: 12px 18px;
+      font-family: inherit;
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--color-text-muted);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      min-height: 46px;
+      border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    }
+    .admin-tab-btn:hover {
+      color: var(--color-text);
+      background-color: var(--color-bg);
+    }
+    .admin-tab-btn.active {
+      color: var(--color-rose-primary);
+      border-bottom-color: var(--color-rose-primary);
+      font-weight: 700;
+      background: none;
+    }
+    .admin-tab-btn svg {
+      flex-shrink: 0;
+    }
+    .admin-tab-badge {
+      font-size: 0.72rem;
+      padding: 2px 8px;
+      border-radius: 9999px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .admin-tab-badge.connected {
+      background: #EBF6EE;
+      color: #1A6330;
+      border: 1px solid #B8E4C4;
+    }
+    .admin-tab-badge.offline {
+      background: #FFF4E5;
+      color: #8F5700;
+      border: 1px solid #F5D3A6;
+    }
+    .admin-tab-badge.error {
+      background: #FDF0F2;
+      color: #B32442;
+      border: 1px solid #F5C6D0;
+    }
+    .admin-tab-panel {
+      animation: fadeInTab 0.2s ease;
+    }
+    @keyframes fadeInTab {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     @media (max-width: 640px) {
       .admin-grid-2 {
         grid-template-columns: 1fr;
@@ -216,24 +292,17 @@
         <div>
           <h1 class="admin-title">Panel Pengajar: Kak Arsil</h1>
           <p style="font-size: 0.84rem; color: var(--color-text-muted); margin-top: 4px;">
-            Kelola data harga, foto profil, durasi paket, jadwal belajar, dan biodata les private.
+            Kelola data harga, foto profil, jadwal belajar, dan konfigurasi database cloud.
           </p>
-          <div style="margin-top: 8px;">
-            <span id="supabaseStatusBadge" class="status-badge offline">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10" />
-              </svg>
-              <span>Memeriksa koneksi database...</span>
-            </span>
-          </div>
         </div>
         <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-          <button type="button" id="openConfigBtn" class="btn-outline-hero"
-            style="font-size: 0.84rem; padding: 8px 14px; min-height: 38px; color: var(--color-blue-primary); border-color: var(--color-blue-border);">
-            Koneksi Supabase
-          </button>
           <a href="index.html" target="_blank" class="btn-outline-hero"
             style="font-size: 0.84rem; padding: 8px 14px; min-height: 38px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px; vertical-align: -2px;">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+              <polyline points="15 3 21 3 21 9"></polyline>
+              <line x1="10" y1="14" x2="21" y2="3"></line>
+            </svg>
             Lihat Website
           </a>
           <button type="button" id="logoutBtn" class="btn-outline-hero"
@@ -243,44 +312,31 @@
         </div>
       </div>
 
-      <!-- Supabase Setup Box (Collapsible / Dynamic) -->
-      <div id="supabaseSetupCard" class="alert-box alert-info" style="display: none;">
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
-          <strong style="font-size: 0.95rem;">Hubungkan ke Database Cloud Supabase</strong>
-          <button type="button" id="closeSetupBtn"
-            style="background: none; border: none; font-size: 1rem; cursor: pointer; color: var(--color-text-muted);">&times;</button>
-        </div>
-        <p style="font-size: 0.84rem; margin-bottom: 12px; font-weight: normal; line-height: 1.5;">
-          Masukkan Project URL dan Anon Public Key dari dashboard Supabase Anda (Project Settings &rarr; API) agar data
-          website tersimpan online di Vercel:
-        </p>
-        <div style="display: flex; flex-direction: column; gap: 10px;">
-          <div>
-            <label style="font-size: 0.78rem; font-weight: 700;">Supabase Project URL:</label>
-            <input type="text" id="supabaseUrlInput" class="form-input" placeholder="https://xxxxxxxx.supabase.co"
-              style="background: #FFFFFF;">
-          </div>
-          <div>
-            <label style="font-size: 0.78rem; font-weight: 700;">Supabase Anon Public Key:</label>
-            <input type="text" id="supabaseKeyInput" class="form-input"
-              placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." style="background: #FFFFFF;">
-          </div>
-          <div style="display: flex; gap: 8px; margin-top: 4px;">
-            <button type="button" id="saveSupabaseConfigBtn" class="btn-primary-hero"
-              style="font-size: 0.84rem; padding: 6px 16px; border: none; cursor: pointer;">
-              Simpan & Hubungkan
-            </button>
-            <button type="button" id="testSupabaseBtn" class="btn-outline-hero"
-              style="font-size: 0.84rem; padding: 6px 14px; min-height: 34px;">
-              Tes Koneksi
-            </button>
-          </div>
-        </div>
-      </div>
+      <!-- Navigasi Tab Eksklusif Admin -->
+      <nav class="admin-tabs-nav" aria-label="Navigasi Pengaturan Admin">
+        <button type="button" id="tabBtnContent" class="admin-tab-btn active">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+          </svg>
+          <span>Kelola Konten & Tarif Les</span>
+        </button>
+        <button type="button" id="tabBtnSupabase" class="admin-tab-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+            <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+            <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+          </svg>
+          <span>Koneksi Supabase Cloud</span>
+          <span id="tabBadgeStatus" class="admin-tab-badge connected">Cloud Aktif</span>
+        </button>
+      </nav>
 
       <div id="saveFeedback" class="alert-box" style="display: none;"></div>
 
-      <form id="adminEditorForm">
+      <!-- TAB 1: KELOLA KONTEN & TARIF -->
+      <div id="tabPanelContent" class="admin-tab-panel">
+        <form id="adminEditorForm">
         <!-- 1. DATA PENGAJAR & PROFIL -->
         <h2 class="admin-section-heading">1. Informasi & Profil Kak Arsil</h2>
 
@@ -426,8 +482,108 @@
           </a>
         </div>
       </form>
-    </div>
+    </div> <!-- /tabPanelContent -->
+
+    <!-- TAB 2: PENGATURAN KONEKSI SUPABASE (EKSKLUSIF ADMIN) -->
+    <div id="tabPanelSupabase" class="admin-tab-panel" style="display: none;">
+      <h2 class="admin-section-heading" style="margin-top: 0;">Pengaturan Database Cloud (Supabase)</h2>
+      <p style="font-size: 0.88rem; color: var(--color-text-muted); margin-bottom: 20px;">
+        Halaman khusus admin untuk mengelola sambungan database Supabase agar pembaruan harga, jadwal, dan biodata les tersimpan permanen di cloud dan otomatis tampil di Vercel.
+      </p>
+
+      <!-- Status Card -->
+      <div style="background: var(--color-bg); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 20px; margin-bottom: 24px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 14px;">
+          <div style="font-weight: 700; color: var(--color-text); font-size: 0.95rem;">
+            Status Sinkronisasi Cloud
+          </div>
+          <span id="supabaseStatusBadge" class="status-badge connected">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Terhubung ke Supabase Cloud</span>
+          </span>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; font-size: 0.84rem;">
+          <div style="background: #FFFFFF; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--color-border);">
+            <div style="color: var(--color-text-muted); font-size: 0.76rem; margin-bottom: 4px;">Tabel Database</div>
+            <div style="font-weight: 700; color: var(--color-text);">site_settings</div>
+          </div>
+          <div style="background: #FFFFFF; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--color-border);">
+            <div style="color: var(--color-text-muted); font-size: 0.76rem; margin-bottom: 4px;">Penyimpanan Gambar</div>
+            <div style="font-weight: 700; color: var(--color-text);">Base64 / URL Web</div>
+          </div>
+          <div style="background: #FFFFFF; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--color-border);">
+            <div style="color: var(--color-text-muted); font-size: 0.76rem; margin-bottom: 4px;">Keamanan Akses</div>
+            <div style="font-weight: 700; color: #1A6330;">RLS Enabled (Aman)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Credentials Form -->
+      <div style="background: #FFFFFF; border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 22px; margin-bottom: 24px;">
+        <h3 style="font-size: 1rem; color: var(--color-rose-primary); margin-bottom: 6px; font-weight: 700;">
+          Kredensial API Supabase
+        </h3>
+        <p style="font-size: 0.82rem; color: var(--color-text-muted); margin-bottom: 16px;">
+          Diambil dari dashboard Supabase Anda (Project Settings &rarr; API atau tombol Connect di bagian atas).
+        </p>
+
+        <div class="form-group">
+          <label class="form-label" for="supabaseUrlInput">Project URL</label>
+          <input type="text" id="supabaseUrlInput" class="form-input" placeholder="https://ixfbfegdleolvehjfggc.supabase.co" style="background: var(--color-bg);">
+          <p style="font-size: 0.74rem; color: var(--color-text-muted); margin-top: 4px;">
+            Format: https://[id-project].supabase.co (tanpa garis miring / atau /rest/v1 di ujung).
+          </p>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="supabaseKeyInput">Anon Public Key</label>
+          <input type="text" id="supabaseKeyInput" class="form-input" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." style="background: var(--color-bg);">
+          <p style="font-size: 0.74rem; color: var(--color-text-muted); margin-top: 4px;">
+            Kunci anon/public aman ditaruh di browser karena hak akses dibatasi oleh kebijakan RLS.
+          </p>
+        </div>
+
+        <div style="display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap;">
+          <button type="button" id="saveSupabaseConfigBtn" class="btn-primary-hero" style="border: none; cursor: pointer;">
+            Simpan & Terapkan Perubahan
+          </button>
+          <button type="button" id="testSupabaseBtn" class="btn-outline-hero" style="min-height: 44px;">
+            Tes Koneksi Database
+          </button>
+        </div>
+      </div>
+
+      <!-- Utilitas Cadangan / Backup -->
+      <div style="background: var(--color-bg); border: 1px dashed var(--color-border); border-radius: var(--radius-md); padding: 18px;">
+        <h3 style="font-size: 0.92rem; color: var(--color-text); margin-bottom: 6px; font-weight: 700;">
+          Cadangan & Sinkronisasi
+        </h3>
+        <p style="font-size: 0.8rem; color: var(--color-text-muted); margin-bottom: 14px;">
+          Unduh salinan data les Kak Arsil ke komputer Anda atau muat ulang data paling mutakhir dari Supabase.
+        </p>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <button type="button" id="downloadBackupBtn" class="btn-outline-hero" style="font-size: 0.84rem; padding: 8px 14px; min-height: 38px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px; vertical-align: -2px;">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Unduh Backup JSON
+          </button>
+          <button type="button" id="reloadCloudBtn" class="btn-outline-hero" style="font-size: 0.84rem; padding: 8px 14px; min-height: 38px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px; vertical-align: -2px;">
+              <polyline points="23 4 23 10 17 10"></polyline>
+              <polyline points="1 20 1 14 7 14"></polyline>
+              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+            </svg>
+            Muat Ulang dari Cloud
+          </button>
+        </div>
+      </div>
+    </div> <!-- /tabPanelSupabase -->
   </div>
+</div>
 
   <script>
     (function () {
@@ -445,13 +601,18 @@
       var logoutBtn = document.getElementById('logoutBtn');
 
       var supabaseStatusBadge = document.getElementById('supabaseStatusBadge');
-      var supabaseSetupCard = document.getElementById('supabaseSetupCard');
-      var openConfigBtn = document.getElementById('openConfigBtn');
-      var closeSetupBtn = document.getElementById('closeSetupBtn');
       var supabaseUrlInput = document.getElementById('supabaseUrlInput');
       var supabaseKeyInput = document.getElementById('supabaseKeyInput');
       var saveSupabaseConfigBtn = document.getElementById('saveSupabaseConfigBtn');
       var testSupabaseBtn = document.getElementById('testSupabaseBtn');
+
+      var tabBtnContent = document.getElementById('tabBtnContent');
+      var tabBtnSupabase = document.getElementById('tabBtnSupabase');
+      var tabPanelContent = document.getElementById('tabPanelContent');
+      var tabPanelSupabase = document.getElementById('tabPanelSupabase');
+      var tabBadgeStatus = document.getElementById('tabBadgeStatus');
+      var downloadBackupBtn = document.getElementById('downloadBackupBtn');
+      var reloadCloudBtn = document.getElementById('reloadCloudBtn');
 
       var adminEditorForm = document.getElementById('adminEditorForm');
       var saveFeedback = document.getElementById('saveFeedback');
@@ -462,6 +623,51 @@
       var avatarUrlInput = document.getElementById('avatarUrlInput');
       var resetAvatarCheck = document.getElementById('resetAvatarCheck');
       var avatarStatusLabel = document.getElementById('avatarStatusLabel');
+
+      // Tab Switching Handler
+      function switchTab(target) {
+        if (target === 'supabase') {
+          tabBtnSupabase.classList.add('active');
+          tabBtnContent.classList.remove('active');
+          tabPanelSupabase.style.display = 'block';
+          tabPanelContent.style.display = 'none';
+          supabaseUrlInput.value = window.ArsilSupabase.getUrl();
+          supabaseKeyInput.value = window.ArsilSupabase.getKey();
+        } else {
+          tabBtnContent.classList.add('active');
+          tabBtnSupabase.classList.remove('active');
+          tabPanelContent.style.display = 'block';
+          tabPanelSupabase.style.display = 'none';
+        }
+      }
+
+      tabBtnContent.addEventListener('click', function () { switchTab('content'); });
+      tabBtnSupabase.addEventListener('click', function () { switchTab('supabase'); });
+
+      // Download JSON Backup
+      downloadBackupBtn.addEventListener('click', function () {
+        if (!currentData) {
+          alert('Data belum siap untuk diunduh.');
+          return;
+        }
+        var dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(currentData, null, 2));
+        var downloadAnchor = document.createElement('a');
+        downloadAnchor.setAttribute('href', dataStr);
+        downloadAnchor.setAttribute('download', 'arsiles-backup-' + new Date().toISOString().slice(0, 10) + '.json');
+        document.body.appendChild(downloadAnchor);
+        downloadAnchor.click();
+        downloadAnchor.remove();
+      });
+
+      // Reload data from cloud
+      reloadCloudBtn.addEventListener('click', async function () {
+        reloadCloudBtn.disabled = true;
+        reloadCloudBtn.textContent = 'Memuat ulang...';
+        await loadDashboardData();
+        reloadCloudBtn.disabled = false;
+        reloadCloudBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px; vertical-align: -2px;"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg> Muat Ulang dari Cloud';
+        alert('Data berhasil disinkronkan ulang dari Supabase!');
+      });
 
       // Check auth state
       function checkAuth() {
@@ -500,17 +706,6 @@
         checkAuth();
       });
 
-      // Supabase Config View
-      openConfigBtn.addEventListener('click', function () {
-        supabaseSetupCard.style.display = supabaseSetupCard.style.display === 'none' ? 'block' : 'none';
-        supabaseUrlInput.value = window.ArsilSupabase.getUrl();
-        supabaseKeyInput.value = window.ArsilSupabase.getKey();
-      });
-
-      closeSetupBtn.addEventListener('click', function () {
-        supabaseSetupCard.style.display = 'none';
-      });
-
       saveSupabaseConfigBtn.addEventListener('click', function () {
         var rawUrl = supabaseUrlInput.value;
         var rawKey = supabaseKeyInput.value;
@@ -526,8 +721,8 @@
         supabaseKeyInput.value = key;
         window.ArsilSupabase.setConfig(url, key);
         alert('Pengaturan Supabase disimpan!\nURL yang digunakan: ' + url);
-        supabaseSetupCard.style.display = 'none';
         loadDashboardData();
+        switchTab('content');
       });
 
       testSupabaseBtn.addEventListener('click', async function () {
@@ -554,7 +749,7 @@
         } catch (err) {
           alert('Gagal terhubung ke Supabase: ' + err.message + '\n\nTips: Pastikan URL berformat: https://[id-project].supabase.co (tanpa /rest/v1 atau garis miring di akhir).');
         } finally {
-          testSupabaseBtn.textContent = 'Tes Koneksi';
+          testSupabaseBtn.textContent = 'Tes Koneksi Database';
           testSupabaseBtn.disabled = false;
         }
       });
@@ -564,26 +759,39 @@
         if (type === 'connected') {
           supabaseStatusBadge.className = 'status-badge connected';
           supabaseStatusBadge.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> ' + (message || 'Terhubung ke Supabase Cloud');
+          if (tabBadgeStatus) {
+            tabBadgeStatus.className = 'admin-tab-badge connected';
+            tabBadgeStatus.textContent = 'Terhubung';
+          }
         } else if (type === 'error') {
           supabaseStatusBadge.className = 'status-badge error';
           supabaseStatusBadge.title = 'Klik untuk membuka pengaturan koneksi Supabase';
-          supabaseStatusBadge.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> ' + (message || 'Gagal Terhubung ke Supabase (Klik di sini)');
+          supabaseStatusBadge.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> ' + (message || 'Gagal Terhubung ke Supabase');
+          if (tabBadgeStatus) {
+            tabBadgeStatus.className = 'admin-tab-badge error';
+            tabBadgeStatus.textContent = 'Error';
+          }
         } else if (type === 'checking') {
           supabaseStatusBadge.className = 'status-badge offline';
           supabaseStatusBadge.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg> ' + (message || 'Memeriksa koneksi Supabase...');
+          if (tabBadgeStatus) {
+            tabBadgeStatus.className = 'admin-tab-badge offline';
+            tabBadgeStatus.textContent = 'Memeriksa...';
+          }
         } else {
           supabaseStatusBadge.className = 'status-badge offline';
           supabaseStatusBadge.title = 'Klik untuk membuka pengaturan koneksi Supabase';
           supabaseStatusBadge.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg> ' + (message || 'Data Lokal (Supabase belum dihubungkan)');
+          if (tabBadgeStatus) {
+            tabBadgeStatus.className = 'admin-tab-badge offline';
+            tabBadgeStatus.textContent = 'Data Lokal';
+          }
         }
       }
 
-      // Klik badge status untuk langsung membuka panel konfigurasi
+      // Klik badge status untuk langsung berpindah ke tab Supabase
       supabaseStatusBadge.addEventListener('click', function () {
-        supabaseSetupCard.style.display = 'block';
-        supabaseUrlInput.value = window.ArsilSupabase.getUrl();
-        supabaseKeyInput.value = window.ArsilSupabase.getKey();
-        supabaseUrlInput.focus();
+        switchTab('supabase');
       });
 
       // Load initial data
