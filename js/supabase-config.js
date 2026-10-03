@@ -13,24 +13,68 @@
   var STORAGE_KEY_URL = 'arsil_supabase_url';
   var STORAGE_KEY_KEY = 'arsil_supabase_anon_key';
 
+  function sanitizeUrl(rawUrl) {
+    if (!rawUrl) return '';
+    var u = String(rawUrl).trim();
+
+    // Jika user copy URL dashboard browser Supabase:
+    // Contoh: https://supabase.com/dashboard/project/abcdefghijklmnopqrst
+    var dashboardMatch = u.match(/supabase\.com\/dashboard\/project\/([a-zA-Z0-9_\-]+)/i);
+    if (dashboardMatch && dashboardMatch[1]) {
+      return 'https://' + dashboardMatch[1] + '.supabase.co';
+    }
+
+    // Pastikan prefix https://
+    if (!/^https?:\/\//i.test(u)) {
+      u = 'https://' + u;
+    }
+
+    // Hapus trailing slashes dan subpath API yang tidak sengaja terbawa
+    u = u.replace(/\/+$/, '');
+    u = u.replace(/\/rest\/v1\/?$/i, '');
+    u = u.replace(/\/auth\/v1\/?$/i, '');
+    u = u.replace(/\/graphql\/v1\/?$/i, '');
+    u = u.replace(/\/storage\/v1\/?$/i, '');
+
+    return u;
+  }
+
+  function sanitizeKey(rawKey) {
+    if (!rawKey) return '';
+    var k = String(rawKey).trim();
+    // Hapus tanda petik jika ada
+    k = k.replace(/^["']|["']$/g, '');
+    return k;
+  }
+
   function getSupabaseUrl() {
     var stored = localStorage.getItem(STORAGE_KEY_URL);
-    if (stored && stored.trim()) return stored.trim();
-    return DEFAULT_SUPABASE_URL;
+    if (stored && stored.trim()) return sanitizeUrl(stored);
+    return sanitizeUrl(DEFAULT_SUPABASE_URL);
   }
 
   function getSupabaseAnonKey() {
     var stored = localStorage.getItem(STORAGE_KEY_KEY);
-    if (stored && stored.trim()) return stored.trim();
-    return DEFAULT_SUPABASE_ANON_KEY;
+    if (stored && stored.trim()) return sanitizeKey(stored);
+    return sanitizeKey(DEFAULT_SUPABASE_ANON_KEY);
   }
 
+  var _client = null;
+
   function setSupabaseConfig(url, key) {
-    if (url) localStorage.setItem(STORAGE_KEY_URL, url.trim());
-    if (key) localStorage.setItem(STORAGE_KEY_KEY, key.trim());
+    _client = null; // Reset cached client
+    if (url) {
+      var cleanedUrl = sanitizeUrl(url);
+      localStorage.setItem(STORAGE_KEY_URL, cleanedUrl);
+    }
+    if (key) {
+      var cleanedKey = sanitizeKey(key);
+      localStorage.setItem(STORAGE_KEY_KEY, cleanedKey);
+    }
   }
 
   function clearSupabaseConfig() {
+    _client = null;
     localStorage.removeItem(STORAGE_KEY_URL);
     localStorage.removeItem(STORAGE_KEY_KEY);
   }
@@ -41,7 +85,6 @@
     return Boolean(url && key && url.indexOf('supabase.co') !== -1);
   }
 
-  var _client = null;
   function getClient() {
     if (!window.supabase || !isConfigured()) return null;
     var url = getSupabaseUrl();
@@ -108,6 +151,8 @@
   window.ArsilSupabase = {
     getUrl: getSupabaseUrl,
     getKey: getSupabaseAnonKey,
+    sanitizeUrl: sanitizeUrl,
+    sanitizeKey: sanitizeKey,
     setConfig: setSupabaseConfig,
     clearConfig: clearSupabaseConfig,
     isConfigured: isConfigured,

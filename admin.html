@@ -462,34 +462,47 @@
       });
 
       saveSupabaseConfigBtn.addEventListener('click', function () {
-        var url = supabaseUrlInput.value.trim();
-        var key = supabaseKeyInput.value.trim();
+        var rawUrl = supabaseUrlInput.value;
+        var rawKey = supabaseKeyInput.value;
+        var url = window.ArsilSupabase.sanitizeUrl ? window.ArsilSupabase.sanitizeUrl(rawUrl) : rawUrl.trim();
+        var key = window.ArsilSupabase.sanitizeKey ? window.ArsilSupabase.sanitizeKey(rawKey) : rawKey.trim();
+
         if (!url || !key) {
           alert('Harap isi URL dan Anon Key Supabase.');
           return;
         }
+
+        supabaseUrlInput.value = url;
+        supabaseKeyInput.value = key;
         window.ArsilSupabase.setConfig(url, key);
-        alert('Pengaturan Supabase berhasil disimpan! Memuat ulang data dari database...');
+        alert('Pengaturan Supabase disimpan!\nURL yang digunakan: ' + url);
         supabaseSetupCard.style.display = 'none';
         loadDashboardData();
       });
 
       testSupabaseBtn.addEventListener('click', async function () {
-        var url = supabaseUrlInput.value.trim();
-        var key = supabaseKeyInput.value.trim();
+        var rawUrl = supabaseUrlInput.value;
+        var rawKey = supabaseKeyInput.value;
+        var url = window.ArsilSupabase.sanitizeUrl ? window.ArsilSupabase.sanitizeUrl(rawUrl) : rawUrl.trim();
+        var key = window.ArsilSupabase.sanitizeKey ? window.ArsilSupabase.sanitizeKey(rawKey) : rawKey.trim();
+
         if (!url || !key) {
           alert('Harap isi URL dan Anon Key terlebih dahulu.');
           return;
         }
+
+        supabaseUrlInput.value = url;
+        supabaseKeyInput.value = key;
         testSupabaseBtn.textContent = 'Menguji...';
         testSupabaseBtn.disabled = true;
+
         try {
           var client = window.supabase.createClient(url, key);
           var res = await client.from('site_settings').select('id').limit(1);
           if (res.error) throw res.error;
-          alert('Koneksi berhasil! Tabel site_settings terdeteksi di Supabase.');
+          alert('Koneksi berhasil! Tabel site_settings terdeteksi di Supabase.\nURL: ' + url);
         } catch (err) {
-          alert('Gagal terhubung ke Supabase: ' + err.message + '\n\nPastikan skrip SQL di supabase_schema.sql sudah dijalankan di menu SQL Editor Supabase Anda.');
+          alert('Gagal terhubung ke Supabase: ' + err.message + '\n\nTips: Pastikan URL berformat: https://[id-project].supabase.co (tanpa /rest/v1 atau garis miring di akhir).');
         } finally {
           testSupabaseBtn.textContent = 'Tes Koneksi';
           testSupabaseBtn.disabled = false;
