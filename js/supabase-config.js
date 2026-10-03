@@ -6,9 +6,9 @@
 (function (window) {
   'use strict';
 
-  // Nilai default (dapat Anda isi di sini atau disimpan lewat formulir pengaturan di admin.html)
-  var DEFAULT_SUPABASE_URL = '';
-  var DEFAULT_SUPABASE_ANON_KEY = '';
+  // Nilai default resmi project Supabase
+  var DEFAULT_SUPABASE_URL = 'https://ixfbfegdleolvehjfggc.supabase.co';
+  var DEFAULT_SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml4ZmJmZWdkbGVvbHZlaGpmZ2djIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEwMTA1MzgsImV4cCI6MjEwNjU4NjUzOH0.dtnNfgC7-nQOvM_SA1RK93qzeI5pQKgACBZceLZoFRs';
 
   var STORAGE_KEY_URL = 'arsil_supabase_url';
   var STORAGE_KEY_KEY = 'arsil_supabase_anon_key';
