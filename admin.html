@@ -162,9 +162,11 @@
       overflow-x: auto;
       scrollbar-width: none;
     }
+
     .admin-tabs-nav::-webkit-scrollbar {
       display: none;
     }
+
     .admin-tab-btn {
       background: none;
       border: none;
@@ -184,19 +186,23 @@
       min-height: 46px;
       border-radius: var(--radius-sm) var(--radius-sm) 0 0;
     }
+
     .admin-tab-btn:hover {
       color: var(--color-text);
       background-color: var(--color-bg);
     }
+
     .admin-tab-btn.active {
       color: var(--color-rose-primary);
       border-bottom-color: var(--color-rose-primary);
       font-weight: 700;
       background: none;
     }
+
     .admin-tab-btn svg {
       flex-shrink: 0;
     }
+
     .admin-tab-badge {
       font-size: 0.72rem;
       padding: 2px 8px;
@@ -206,27 +212,39 @@
       align-items: center;
       gap: 4px;
     }
+
     .admin-tab-badge.connected {
       background: #EBF6EE;
       color: #1A6330;
       border: 1px solid #B8E4C4;
     }
+
     .admin-tab-badge.offline {
       background: #FFF4E5;
       color: #8F5700;
       border: 1px solid #F5D3A6;
     }
+
     .admin-tab-badge.error {
       background: #FDF0F2;
       color: #B32442;
       border: 1px solid #F5C6D0;
     }
+
     .admin-tab-panel {
       animation: fadeInTab 0.2s ease;
     }
+
     @keyframes fadeInTab {
-      from { opacity: 0; transform: translateY(4px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(4px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     @media (max-width: 640px) {
@@ -298,7 +316,8 @@
         <div style="display: flex; gap: 8px; flex-wrap: wrap;">
           <a href="index.html" target="_blank" class="btn-outline-hero"
             style="font-size: 0.84rem; padding: 8px 14px; min-height: 38px;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px; vertical-align: -2px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              style="margin-right: 4px; vertical-align: -2px;">
               <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
               <polyline points="15 3 21 3 21 9"></polyline>
               <line x1="10" y1="14" x2="21" y2="3"></line>
@@ -337,253 +356,273 @@
       <!-- TAB 1: KELOLA KONTEN & TARIF -->
       <div id="tabPanelContent" class="admin-tab-panel">
         <form id="adminEditorForm">
-        <!-- 1. DATA PENGAJAR & PROFIL -->
-        <h2 class="admin-section-heading">1. Informasi & Profil Kak Arsil</h2>
+          <!-- 1. DATA PENGAJAR & PROFIL -->
+          <h2 class="admin-section-heading">1. Informasi & Profil Kak Arsil</h2>
 
-        <div class="avatar-upload-box">
-          <label class="form-label"
-            style="font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
-            <span>Foto Profil Pengajar</span>
-            <span style="font-size: 0.78rem; font-weight: normal; color: var(--color-rose-primary);">Rasio disarankan
-              1:1 (persegi)</span>
-          </label>
-          <div class="avatar-upload-inner">
-            <div style="text-align: center;">
-              <img id="avatarPreview" src="assets/kak-arsil-profile.jpg" alt="Pratinjau Foto Profil"
-                class="avatar-thumb-img">
-              <span id="avatarStatusLabel"
-                style="display: block; font-size: 0.72rem; color: var(--color-text-muted); margin-top: 6px;">Foto
-                Aktif</span>
-            </div>
-            <div style="flex: 1; min-width: 220px;">
-              <label for="avatarInput" class="form-label"
-                style="font-size: 0.84rem; font-weight: 600; color: var(--color-text); margin-bottom: 4px;">
-                1. Pilih File Foto Baru dari Perangkat (Base64)
-              </label>
-              <input type="file" id="avatarInput" accept="image/png, image/jpeg, image/jpg, image/webp"
-                class="form-input" style="padding: 7px; background: #FFFFFF;">
-              <p style="font-size: 0.76rem; color: var(--color-text-muted); margin-top: 4px; margin-bottom: 12px;">
-                Mendukung format JPG, PNG, atau WebP (disarankan di bawah 2 MB).
-              </p>
-
-              <label for="avatarUrlInput" class="form-label"
-                style="font-size: 0.84rem; font-weight: 600; color: var(--color-text); margin-bottom: 4px;">
-                2. Atau Masukkan URL / Path Gambar Langsung
-              </label>
-              <input type="text" id="avatarUrlInput" class="form-input"
-                placeholder="assets/kak-arsil-profile.jpg atau https://..." style="background: #FFFFFF;">
-
-              <div style="margin-top: 10px; padding-top: 8px; border-top: 1px dashed var(--color-border);">
-                <label
-                  style="font-size: 0.82rem; color: var(--color-text-muted); cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
-                  <input type="checkbox" id="resetAvatarCheck">
-                  Kembalikan ke foto ilustrasi bawaan sistem
+          <div class="avatar-upload-box">
+            <label class="form-label"
+              style="font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+              <span>Foto Profil Pengajar</span>
+              <span style="font-size: 0.78rem; font-weight: normal; color: var(--color-rose-primary);">Rasio disarankan
+                1:1 (persegi)</span>
+            </label>
+            <div class="avatar-upload-inner">
+              <div style="text-align: center;">
+                <img id="avatarPreview" src="assets/kak-arsil-profile.jpg" alt="Pratinjau Foto Profil"
+                  class="avatar-thumb-img">
+                <span id="avatarStatusLabel"
+                  style="display: block; font-size: 0.72rem; color: var(--color-text-muted); margin-top: 6px;">Foto
+                  Aktif</span>
+              </div>
+              <div style="flex: 1; min-width: 220px;">
+                <label for="avatarInput" class="form-label"
+                  style="font-size: 0.84rem; font-weight: 600; color: var(--color-text); margin-bottom: 4px;">
+                  1. Pilih File Foto Baru dari Perangkat (Base64)
                 </label>
+                <input type="file" id="avatarInput" accept="image/png, image/jpeg, image/jpg, image/webp"
+                  class="form-input" style="padding: 7px; background: #FFFFFF;">
+                <p style="font-size: 0.76rem; color: var(--color-text-muted); margin-top: 4px; margin-bottom: 12px;">
+                  Mendukung format JPG, PNG, atau WebP (disarankan di bawah 2 MB).
+                </p>
+
+                <label for="avatarUrlInput" class="form-label"
+                  style="font-size: 0.84rem; font-weight: 600; color: var(--color-text); margin-bottom: 4px;">
+                  2. Atau Masukkan URL / Path Gambar Langsung
+                </label>
+                <input type="text" id="avatarUrlInput" class="form-input"
+                  placeholder="assets/kak-arsil-profile.jpg atau https://..." style="background: #FFFFFF;">
+
+                <div style="margin-top: 10px; padding-top: 8px; border-top: 1px dashed var(--color-border);">
+                  <label
+                    style="font-size: 0.82rem; color: var(--color-text-muted); cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+                    <input type="checkbox" id="resetAvatarCheck">
+                    Kembalikan ke foto ilustrasi bawaan sistem
+                  </label>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div class="admin-grid-2">
-          <div class="form-group">
-            <label class="form-label">Nama Pengajar</label>
-            <input type="text" id="teacherName" class="form-input" required>
+          <div class="admin-grid-2">
+            <div class="form-group">
+              <label class="form-label">Nama Pengajar</label>
+              <input type="text" id="teacherName" class="form-input" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nomor WhatsApp (Contoh: 6281234567890)</label>
+              <input type="text" id="teacherWhatsapp" class="form-input" required>
+            </div>
           </div>
-          <div class="form-group">
-            <label class="form-label">Nomor WhatsApp (Contoh: 6281234567890)</label>
-            <input type="text" id="teacherWhatsapp" class="form-input" required>
+
+          <div class="admin-grid-2">
+            <div class="form-group">
+              <label class="form-label">Judul Utama Halaman</label>
+              <input type="text" id="teacherHeadline" class="form-input" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Slogan (Tagline)</label>
+              <input type="text" id="teacherTagline" class="form-input" required>
+            </div>
           </div>
-        </div>
 
-        <div class="admin-grid-2">
           <div class="form-group">
-            <label class="form-label">Judul Utama Halaman</label>
-            <input type="text" id="teacherHeadline" class="form-input" required>
+            <label class="form-label">Deskripsi Pengantar (Subheadline)</label>
+            <input type="text" id="teacherSubheadline" class="form-input">
           </div>
+
           <div class="form-group">
-            <label class="form-label">Slogan (Tagline)</label>
-            <input type="text" id="teacherTagline" class="form-input" required>
+            <label class="form-label">Salam Pembuka Profil</label>
+            <input type="text" id="profileGreeting" class="form-input">
           </div>
-        </div>
 
-        <div class="form-group">
-          <label class="form-label">Deskripsi Pengantar (Subheadline)</label>
-          <input type="text" id="teacherSubheadline" class="form-input">
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Salam Pembuka Profil</label>
-          <input type="text" id="profileGreeting" class="form-input">
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Biodata / Perkenalan Pengajar</label>
-          <textarea id="profileBio" class="form-textarea" rows="3"></textarea>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Ajakan Penutup (CTA Banner)</label>
-          <input type="text" id="teacherCta" class="form-input">
-        </div>
-
-        <!-- 2. BIAYA PER JENJANG -->
-        <h2 class="admin-section-heading">2. Tarif Les Per Pertemuan Tiap Jenjang</h2>
-        <div id="levelsContainer"></div>
-
-        <!-- 3. DETAIL PAKET A, B, C -->
-        <h2 class="admin-section-heading">3. Detail Pilihan Paket A, B, dan C</h2>
-        <div id="packagesContainer"></div>
-
-        <!-- 4. JADWAL & TRANSPORT -->
-        <h2 class="admin-section-heading">4. Jadwal & Biaya Transportasi</h2>
-        <div class="admin-grid-2">
           <div class="form-group">
-            <label class="form-label">Waktu Les</label>
-            <input type="text" id="scheduleTimes" class="form-input" required>
+            <label class="form-label">Biodata / Perkenalan Pengajar</label>
+            <textarea id="profileBio" class="form-textarea" rows="3"></textarea>
           </div>
+
           <div class="form-group">
-            <label class="form-label">Hari Belajar</label>
-            <input type="text" id="scheduleDays" class="form-input" required>
+            <label class="form-label">Ajakan Penutup (CTA Banner)</label>
+            <input type="text" id="teacherCta" class="form-input">
           </div>
-        </div>
 
-        <div class="admin-grid-2">
+          <!-- 2. BIAYA PER JENJANG -->
+          <h2 class="admin-section-heading">2. Tarif Les Per Pertemuan Tiap Jenjang</h2>
+          <div id="levelsContainer"></div>
+
+          <!-- 3. DETAIL PAKET A, B, C -->
+          <h2 class="admin-section-heading">3. Detail Pilihan Paket A, B, dan C</h2>
+          <div id="packagesContainer"></div>
+
+          <!-- 4. JADWAL & TRANSPORT -->
+          <h2 class="admin-section-heading">4. Jadwal & Biaya Transportasi</h2>
+          <div class="admin-grid-2">
+            <div class="form-group">
+              <label class="form-label">Waktu Les</label>
+              <input type="text" id="scheduleTimes" class="form-input" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Hari Belajar</label>
+              <input type="text" id="scheduleDays" class="form-input" required>
+            </div>
+          </div>
+
+          <div class="admin-grid-2">
+            <div class="form-group">
+              <label class="form-label">Biaya Transport per KM (Rupiah)</label>
+              <input type="number" step="500" id="transportFeePerKm" class="form-input" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Catatan Hari Libur / Weekend</label>
+              <input type="text" id="scheduleNote" class="form-input" required>
+            </div>
+          </div>
+
           <div class="form-group">
-            <label class="form-label">Biaya Transport per KM (Rupiah)</label>
-            <input type="number" step="500" id="transportFeePerKm" class="form-input" required>
+            <label class="form-label">Keterangan Transportasi</label>
+            <input type="text" id="transportNote" class="form-input">
           </div>
-          <div class="form-group">
-            <label class="form-label">Catatan Hari Libur / Weekend</label>
-            <input type="text" id="scheduleNote" class="form-input" required>
+
+          <!-- 5. KEAMANAN PIN -->
+          <h2 class="admin-section-heading">5. Ganti PIN Keamanan Admin</h2>
+          <div class="form-group" style="max-width: 300px;">
+            <label class="form-label">PIN Baru (Kosongkan jika tidak ingin mengubah)</label>
+            <input type="password" id="newAdminPin" class="form-input" placeholder="Misal: 6 angka">
           </div>
-        </div>
 
-        <div class="form-group">
-          <label class="form-label">Keterangan Transportasi</label>
-          <input type="text" id="transportNote" class="form-input">
-        </div>
+          <!-- SUBMIT BUTTON -->
+          <div
+            style="margin-top: 28px; padding-top: 18px; border-top: 1px solid var(--color-border); display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+            <button type="submit" id="saveDataBtn" class="btn-primary-hero" style="cursor: pointer; border: none;">
+              Simpan Perubahan
+            </button>
+            <a href="index.html" class="btn-outline-hero"
+              style="min-height: 44px; display: inline-flex; align-items: center;">
+              Kembali ke Beranda
+            </a>
+          </div>
+        </form>
+      </div> <!-- /tabPanelContent -->
 
-        <!-- 5. KEAMANAN PIN -->
-        <h2 class="admin-section-heading">5. Ganti PIN Keamanan Admin</h2>
-        <div class="form-group" style="max-width: 300px;">
-          <label class="form-label">PIN Baru (Kosongkan jika tidak ingin mengubah)</label>
-          <input type="password" id="newAdminPin" class="form-input" placeholder="Misal: 6 angka">
-        </div>
+      <!-- TAB 2: PENGATURAN KONEKSI SUPABASE (EKSKLUSIF ADMIN) -->
+      <div id="tabPanelSupabase" class="admin-tab-panel" style="display: none;">
+        <h2 class="admin-section-heading" style="margin-top: 0;">Pengaturan Database Cloud Supabase (jangan diotak atik
+          ya, biar mas naji saja:)</h2>
+        <p style="font-size: 0.88rem; color: var(--color-text-muted); margin-bottom: 20px;">
+          Halaman khusus admin untuk mengelola sambungan database Supabase agar pembaruan harga, jadwal, dan biodata les
+          tersimpan permanen di cloud dan otomatis tampil di Vercel.
+        </p>
 
-        <!-- SUBMIT BUTTON -->
+        <!-- Status Card -->
         <div
-          style="margin-top: 28px; padding-top: 18px; border-top: 1px solid var(--color-border); display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
-          <button type="submit" id="saveDataBtn" class="btn-primary-hero" style="cursor: pointer; border: none;">
-            Simpan Perubahan
-          </button>
-          <a href="index.html" class="btn-outline-hero"
-            style="min-height: 44px; display: inline-flex; align-items: center;">
-            Kembali ke Beranda
-          </a>
-        </div>
-      </form>
-    </div> <!-- /tabPanelContent -->
-
-    <!-- TAB 2: PENGATURAN KONEKSI SUPABASE (EKSKLUSIF ADMIN) -->
-    <div id="tabPanelSupabase" class="admin-tab-panel" style="display: none;">
-      <h2 class="admin-section-heading" style="margin-top: 0;">Pengaturan Database Cloud (Supabase)</h2>
-      <p style="font-size: 0.88rem; color: var(--color-text-muted); margin-bottom: 20px;">
-        Halaman khusus admin untuk mengelola sambungan database Supabase agar pembaruan harga, jadwal, dan biodata les tersimpan permanen di cloud dan otomatis tampil di Vercel.
-      </p>
-
-      <!-- Status Card -->
-      <div style="background: var(--color-bg); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 20px; margin-bottom: 24px;">
-        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 14px;">
-          <div style="font-weight: 700; color: var(--color-text); font-size: 0.95rem;">
-            Status Sinkronisasi Cloud
+          style="background: var(--color-bg); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 20px; margin-bottom: 24px;">
+          <div
+            style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 14px;">
+            <div style="font-weight: 700; color: var(--color-text); font-size: 0.95rem;">
+              Status Sinkronisasi Cloud
+            </div>
+            <span id="supabaseStatusBadge" class="status-badge connected">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+              <span>Terhubung ke Supabase Cloud</span>
+            </span>
           </div>
-          <span id="supabaseStatusBadge" class="status-badge connected">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-            <span>Terhubung ke Supabase Cloud</span>
-          </span>
-        </div>
 
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; font-size: 0.84rem;">
-          <div style="background: #FFFFFF; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--color-border);">
-            <div style="color: var(--color-text-muted); font-size: 0.76rem; margin-bottom: 4px;">Tabel Database</div>
-            <div style="font-weight: 700; color: var(--color-text);">site_settings</div>
-          </div>
-          <div style="background: #FFFFFF; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--color-border);">
-            <div style="color: var(--color-text-muted); font-size: 0.76rem; margin-bottom: 4px;">Penyimpanan Gambar</div>
-            <div style="font-weight: 700; color: var(--color-text);">Base64 / URL Web</div>
-          </div>
-          <div style="background: #FFFFFF; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--color-border);">
-            <div style="color: var(--color-text-muted); font-size: 0.76rem; margin-bottom: 4px;">Keamanan Akses</div>
-            <div style="font-weight: 700; color: #1A6330;">RLS Enabled (Aman)</div>
+          <div
+            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; font-size: 0.84rem;">
+            <div
+              style="background: #FFFFFF; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--color-border);">
+              <div style="color: var(--color-text-muted); font-size: 0.76rem; margin-bottom: 4px;">Tabel Database</div>
+              <div style="font-weight: 700; color: var(--color-text);">site_settings</div>
+            </div>
+            <div
+              style="background: #FFFFFF; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--color-border);">
+              <div style="color: var(--color-text-muted); font-size: 0.76rem; margin-bottom: 4px;">Penyimpanan Gambar
+              </div>
+              <div style="font-weight: 700; color: var(--color-text);">Base64 / URL Web</div>
+            </div>
+            <div
+              style="background: #FFFFFF; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--color-border);">
+              <div style="color: var(--color-text-muted); font-size: 0.76rem; margin-bottom: 4px;">Keamanan Akses</div>
+              <div style="font-weight: 700; color: #1A6330;">RLS Enabled (Aman)</div>
+            </div>
           </div>
         </div>
-      </div>
 
-      <!-- Credentials Form -->
-      <div style="background: #FFFFFF; border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 22px; margin-bottom: 24px;">
-        <h3 style="font-size: 1rem; color: var(--color-rose-primary); margin-bottom: 6px; font-weight: 700;">
-          Kredensial API Supabase
-        </h3>
-        <p style="font-size: 0.82rem; color: var(--color-text-muted); margin-bottom: 16px;">
-          Diambil dari dashboard Supabase Anda (Project Settings &rarr; API atau tombol Connect di bagian atas).
-        </p>
-
-        <div class="form-group">
-          <label class="form-label" for="supabaseUrlInput">Project URL</label>
-          <input type="text" id="supabaseUrlInput" class="form-input" placeholder="https://ixfbfegdleolvehjfggc.supabase.co" style="background: var(--color-bg);">
-          <p style="font-size: 0.74rem; color: var(--color-text-muted); margin-top: 4px;">
-            Format: https://[id-project].supabase.co (tanpa garis miring / atau /rest/v1 di ujung).
+        <!-- Credentials Form -->
+        <div
+          style="background: #FFFFFF; border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 22px; margin-bottom: 24px;">
+          <h3 style="font-size: 1rem; color: var(--color-rose-primary); margin-bottom: 6px; font-weight: 700;">
+            Kredensial API Supabase
+          </h3>
+          <p style="font-size: 0.82rem; color: var(--color-text-muted); margin-bottom: 16px;">
+            Diambil dari dashboard Supabase Anda (Project Settings &rarr; API atau tombol Connect di bagian atas).
           </p>
+
+          <div class="form-group">
+            <label class="form-label" for="supabaseUrlInput">Project URL</label>
+            <input type="text" id="supabaseUrlInput" class="form-input"
+              placeholder="https://ixfbfegdleolvehjfggc.supabase.co" style="background: var(--color-bg);">
+            <p style="font-size: 0.74rem; color: var(--color-text-muted); margin-top: 4px;">
+              Format: https://[id-project].supabase.co (tanpa garis miring / atau /rest/v1 di ujung).
+            </p>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="supabaseKeyInput">Anon Public Key</label>
+            <input type="text" id="supabaseKeyInput" class="form-input"
+              placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." style="background: var(--color-bg);">
+            <p style="font-size: 0.74rem; color: var(--color-text-muted); margin-top: 4px;">
+              Kunci anon/public aman ditaruh di browser karena hak akses dibatasi oleh kebijakan RLS.
+            </p>
+          </div>
+
+          <div style="display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap;">
+            <button type="button" id="saveSupabaseConfigBtn" class="btn-primary-hero"
+              style="border: none; cursor: pointer;">
+              Simpan & Terapkan Perubahan
+            </button>
+            <button type="button" id="testSupabaseBtn" class="btn-outline-hero" style="min-height: 44px;">
+              Tes Koneksi Database
+            </button>
+          </div>
         </div>
 
-        <div class="form-group">
-          <label class="form-label" for="supabaseKeyInput">Anon Public Key</label>
-          <input type="text" id="supabaseKeyInput" class="form-input" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." style="background: var(--color-bg);">
-          <p style="font-size: 0.74rem; color: var(--color-text-muted); margin-top: 4px;">
-            Kunci anon/public aman ditaruh di browser karena hak akses dibatasi oleh kebijakan RLS.
+        <!-- Utilitas Cadangan / Backup -->
+        <div
+          style="background: var(--color-bg); border: 1px dashed var(--color-border); border-radius: var(--radius-md); padding: 18px;">
+          <h3 style="font-size: 0.92rem; color: var(--color-text); margin-bottom: 6px; font-weight: 700;">
+            Cadangan & Sinkronisasi
+          </h3>
+          <p style="font-size: 0.8rem; color: var(--color-text-muted); margin-bottom: 14px;">
+            Unduh salinan data les Kak Arsil ke komputer Anda atau muat ulang data paling mutakhir dari Supabase.
           </p>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button type="button" id="downloadBackupBtn" class="btn-outline-hero"
+              style="font-size: 0.84rem; padding: 8px 14px; min-height: 38px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                style="margin-right: 4px; vertical-align: -2px;">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              Unduh Backup JSON
+            </button>
+            <button type="button" id="reloadCloudBtn" class="btn-outline-hero"
+              style="font-size: 0.84rem; padding: 8px 14px; min-height: 38px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                style="margin-right: 4px; vertical-align: -2px;">
+                <polyline points="23 4 23 10 17 10"></polyline>
+                <polyline points="1 20 1 14 7 14"></polyline>
+                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+              </svg>
+              Muat Ulang dari Cloud
+            </button>
+          </div>
         </div>
-
-        <div style="display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap;">
-          <button type="button" id="saveSupabaseConfigBtn" class="btn-primary-hero" style="border: none; cursor: pointer;">
-            Simpan & Terapkan Perubahan
-          </button>
-          <button type="button" id="testSupabaseBtn" class="btn-outline-hero" style="min-height: 44px;">
-            Tes Koneksi Database
-          </button>
-        </div>
-      </div>
-
-      <!-- Utilitas Cadangan / Backup -->
-      <div style="background: var(--color-bg); border: 1px dashed var(--color-border); border-radius: var(--radius-md); padding: 18px;">
-        <h3 style="font-size: 0.92rem; color: var(--color-text); margin-bottom: 6px; font-weight: 700;">
-          Cadangan & Sinkronisasi
-        </h3>
-        <p style="font-size: 0.8rem; color: var(--color-text-muted); margin-bottom: 14px;">
-          Unduh salinan data les Kak Arsil ke komputer Anda atau muat ulang data paling mutakhir dari Supabase.
-        </p>
-        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-          <button type="button" id="downloadBackupBtn" class="btn-outline-hero" style="font-size: 0.84rem; padding: 8px 14px; min-height: 38px;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px; vertical-align: -2px;">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-              <polyline points="7 10 12 15 17 10"></polyline>
-              <line x1="12" y1="15" x2="12" y2="3"></line>
-            </svg>
-            Unduh Backup JSON
-          </button>
-          <button type="button" id="reloadCloudBtn" class="btn-outline-hero" style="font-size: 0.84rem; padding: 8px 14px; min-height: 38px;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px; vertical-align: -2px;">
-              <polyline points="23 4 23 10 17 10"></polyline>
-              <polyline points="1 20 1 14 7 14"></polyline>
-              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
-            </svg>
-            Muat Ulang dari Cloud
-          </button>
-        </div>
-      </div>
-    </div> <!-- /tabPanelSupabase -->
+      </div> <!-- /tabPanelSupabase -->
+    </div>
   </div>
-</div>
 
   <script>
     (function () {
