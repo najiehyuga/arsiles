@@ -8,7 +8,7 @@
 (function () {
   'use strict';
 
-  const { useState, useEffect, useMemo, createElement: h } = React;
+  const { useState, useEffect, useMemo, useRef, createElement: h } = React;
 
   // Format currency IDR
   function formatRupiah(num) {
@@ -45,6 +45,49 @@
       h('path', { d: 'M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z' })
     );
 
+  const IconMapPin = () =>
+    h('svg', { width: 16, height: 16, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2, 'aria-hidden': 'true' },
+      h('path', { d: 'M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z' }),
+      h('circle', { cx: 12, cy: 10, r: 3 })
+    );
+
+  const IconCrosshair = () =>
+    h('svg', { width: 14, height: 14, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2, 'aria-hidden': 'true' },
+      h('circle', { cx: 12, cy: 12, r: 10 }),
+      h('line', { x1: 22, y1: 12, x2: 18, y2: 12 }),
+      h('line', { x1: 6, y1: 12, x2: 2, y2: 12 }),
+      h('line', { x1: 12, y1: 6, x2: 12, y2: 2 }),
+      h('line', { x1: 12, y1: 22, x2: 12, y2: 18 })
+    );
+
+  const IconRoute = () =>
+    h('svg', { width: 14, height: 14, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2, 'aria-hidden': 'true' },
+      h('polyline', { points: '15 3 21 3 21 9' }),
+      h('polyline', { points: '9 21 3 21 3 15' }),
+      h('line', { x1: 21, y1: 3, x2: 14, y2: 10 }),
+      h('line', { x1: 3, y1: 21, x2: 10, y2: 14 })
+    );
+
+  const IconRotateCcw = () =>
+    h('svg', { width: 14, height: 14, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2, 'aria-hidden': 'true' },
+      h('polyline', { points: '1 4 1 10 7 10' }),
+      h('path', { d: 'M3.51 15a9 9 0 1 0 2.13-9.36L1 10' })
+    );
+
+  // Haversine straight-line distance with ~1.25x road factor
+  function calculateHaversineKm(lat1, lon1, lat2, lon2) {
+    const R = 6371;
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const straightKm = R * c;
+    return Math.max(1, Math.round(straightKm * 1.25));
+  }
+
   function App() {
     const [data, setData] = useState(window.INITIAL_DATA || null);
     const [loading, setLoading] = useState(!window.INITIAL_DATA);
@@ -60,6 +103,30 @@
     const [address, setAddress] = useState('');
     const [notes, setNotes] = useState('');
     const [totalUpdated, setTotalUpdated] = useState(false);
+
+    // Teacher Location & Interactive Map State
+    const teacherLoc = useMemo(() => {
+      return (data && data.teacher && data.teacher.location) ? data.teacher.location : {
+        name: 'Brajan, Kabupaten Magelang',
+        address: 'Dusun Brajan, Danurejo, Kec. Mertoyudan, Kab. Magelang',
+        lat: -7.5347,
+        lng: 110.2255,
+        max_radius_km: 15
+      };
+    }, [data]);
+
+    const [studentCoords, setStudentCoords] = useState({
+      lat: -7.5180,
+      lng: 110.2330
+    });
+    const [gpsLoading, setGpsLoading] = useState(false);
+    const [gpsNotice, setGpsNotice] = useState('');
+
+    const mapInstanceRef = useRef(null);
+    const teacherMarkerRef = useRef(null);
+    const studentMarkerRef = useRef(null);
+    const routeLineRef = useRef(null);
+    const isManualMoveRef = useRef(false);
 
     // Admin PIN Modal
     const [pinModalOpen, setPinModalOpen] = useState(false);
@@ -167,16 +234,259 @@
 - Nama Murid: ${cName}
 - Jenjang: ${calculation.levelTitle}
 - Pilihan Paket: ${calculation.pkgName} (${calculation.pkgDuration})
+- Titik Berangkat Guru: Dusun Brajan, Kab. Magelang
 - Perkiraan Jarak: ${distanceKm} km
 - Estimasi Biaya: ${formatRupiah(calculation.totalFee)} per sesi
 - Waktu Belajar: ${preferredTime}
 - Alamat Rumah: ${cAddr}
+- Titik Peta Rumah Murid: https://maps.google.com/?q=${studentCoords.lat.toFixed(5)},${studentCoords.lng.toFixed(5)}
 - Catatan: ${cNotes}
 
 Apakah jadwal Kak Arsil masih tersedia? Terima kasih.`;
 
       return `https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`;
-    }, [data, childName, address, notes, calculation, distanceKm, preferredTime]);
+    }, [data, childName, address, notes, calculation, distanceKm, preferredTime, studentCoords, teacherLoc]);
+
+    // Initialize Interactive Leaflet Map
+    useEffect(() => {
+      if (loading || !data) return;
+      if (typeof window === 'undefined' || typeof L === 'undefined') return;
+
+      const mapContainer = document.getElementById('distanceMap');
+      if (!mapContainer) return;
+
+      // Prevent duplicate initialization on the same container
+      if (mapContainer._leaflet_id && mapInstanceRef.current) {
+        return;
+      }
+
+      // If container had an old map attached, remove it
+      if (mapContainer._leaflet_id) {
+        delete mapContainer._leaflet_id;
+      }
+
+      const map = L.map(mapContainer, {
+        center: [teacherLoc.lat, teacherLoc.lng],
+        zoom: 13,
+        zoomControl: true,
+        scrollWheelZoom: false
+      });
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors',
+        maxZoom: 18
+      }).addTo(map);
+
+      // Custom Teacher Pin (Rose)
+      const teacherIcon = L.divIcon({
+        className: 'custom-pin-wrapper',
+        iconSize: [160, 50],
+        iconAnchor: [80, 48],
+        html: '<div class="custom-map-pin teacher">' +
+              '<span class="pin-label">Guru: Brajan, Magelang</span>' +
+              '<svg class="pin-svg" width="28" height="34" viewBox="0 0 24 28" fill="none">' +
+                '<path d="M12 0C5.373 0 0 5.373 0 12c0 8.5 12 16 12 16s12-7.5 12-16c0-6.627-5.373-12-12-12z" fill="#B0456E"/>' +
+                '<circle cx="12" cy="11" r="5" fill="#FFFFFF"/>' +
+                '<path d="M10 9h4v4h-4z" fill="#B0456E"/>' +
+              '</svg>' +
+              '</div>'
+      });
+
+      // Custom Student Pin (Slate Blue)
+      const studentIcon = L.divIcon({
+        className: 'custom-pin-wrapper',
+        iconSize: [160, 50],
+        iconAnchor: [80, 48],
+        html: '<div class="custom-map-pin student">' +
+              '<span class="pin-label">Rumah Murid (Geser)</span>' +
+              '<svg class="pin-svg" width="30" height="36" viewBox="0 0 24 28" fill="none">' +
+                '<path d="M12 0C5.373 0 0 5.373 0 12c0 8.5 12 16 12 16s12-7.5 12-16c0-6.627-5.373-12-12-12z" fill="#2D7296"/>' +
+                '<circle cx="12" cy="11" r="5" fill="#FFFFFF"/>' +
+                '<circle cx="12" cy="11" r="2.5" fill="#2D7296"/>' +
+              '</svg>' +
+              '</div>'
+      });
+
+      // Coverage Radius Circle (15 km)
+      L.circle([teacherLoc.lat, teacherLoc.lng], {
+        radius: (teacherLoc.max_radius_km || 15) * 1000,
+        color: '#B0456E',
+        weight: 1.5,
+        dashArray: '5, 5',
+        fillColor: '#B0456E',
+        fillOpacity: 0.04
+      }).addTo(map);
+
+      // Teacher Marker
+      const tMarker = L.marker([teacherLoc.lat, teacherLoc.lng], {
+        icon: teacherIcon,
+        interactive: true
+      }).addTo(map);
+      tMarker.bindPopup('<b>Lokasi Pengajar (Kak Arsil)</b><br>Dusun Brajan, Danurejo, Kab. Magelang');
+      teacherMarkerRef.current = tMarker;
+
+      // Student Marker
+      const sMarker = L.marker([studentCoords.lat, studentCoords.lng], {
+        icon: studentIcon,
+        draggable: true
+      }).addTo(map);
+      sMarker.bindPopup('<b>Titik Rumah Calon Murid</b><br>Geser pin ini ke lokasi rumah Anda.');
+      studentMarkerRef.current = sMarker;
+
+      // Connecting Polyline Route
+      const polyline = L.polyline([
+        [teacherLoc.lat, teacherLoc.lng],
+        [studentCoords.lat, studentCoords.lng]
+      ], {
+        color: '#B0456E',
+        weight: 3,
+        opacity: 0.8,
+        dashArray: '6, 6'
+      }).addTo(map);
+      routeLineRef.current = polyline;
+
+      // Location update handler
+      function handlePinMove(newLat, newLng) {
+        isManualMoveRef.current = true;
+        sMarker.setLatLng([newLat, newLng]);
+        polyline.setLatLngs([
+          [teacherLoc.lat, teacherLoc.lng],
+          [newLat, newLng]
+        ]);
+        setStudentCoords({ lat: newLat, lng: newLng });
+        const calcDist = calculateHaversineKm(teacherLoc.lat, teacherLoc.lng, newLat, newLng);
+        const clampedDist = Math.max(1, Math.min(15, calcDist));
+        setDistanceKm(clampedDist);
+        setTimeout(() => { isManualMoveRef.current = false; }, 120);
+      }
+
+      sMarker.on('drag', function (e) {
+        const p = e.target.getLatLng();
+        polyline.setLatLngs([
+          [teacherLoc.lat, teacherLoc.lng],
+          [p.lat, p.lng]
+        ]);
+      });
+
+      sMarker.on('dragend', function (e) {
+        const p = e.target.getLatLng();
+        handlePinMove(p.lat, p.lng);
+      });
+
+      map.on('click', function (e) {
+        handlePinMove(e.latlng.lat, e.latlng.lng);
+      });
+
+      map.fitBounds([
+        [teacherLoc.lat, teacherLoc.lng],
+        [studentCoords.lat, studentCoords.lng]
+      ], { padding: [45, 45] });
+
+      mapInstanceRef.current = map;
+
+      // Smooth render size
+      setTimeout(() => {
+        if (mapInstanceRef.current) {
+          mapInstanceRef.current.invalidateSize();
+        }
+      }, 300);
+
+      return () => {
+        if (mapInstanceRef.current) {
+          mapInstanceRef.current.remove();
+          mapInstanceRef.current = null;
+        }
+      };
+    }, [loading, data, teacherLoc]);
+
+    // Two-way sync: Update student pin position when distance slider or preset button is clicked
+    useEffect(() => {
+      if (isManualMoveRef.current) return;
+      if (!mapInstanceRef.current || !studentMarkerRef.current || !routeLineRef.current) return;
+
+      const dLat = studentCoords.lat - teacherLoc.lat;
+      const dLng = studentCoords.lng - teacherLoc.lng;
+      const angle = Math.atan2(dLat, dLng);
+
+      const targetStraightKm = distanceKm / 1.25;
+      const distDeg = targetStraightKm / 111;
+
+      const newLat = teacherLoc.lat + (distDeg * Math.sin(angle));
+      const newLng = teacherLoc.lng + (distDeg * Math.cos(angle) / Math.cos(teacherLoc.lat * Math.PI / 180));
+
+      studentMarkerRef.current.setLatLng([newLat, newLng]);
+      routeLineRef.current.setLatLngs([
+        [teacherLoc.lat, teacherLoc.lng],
+        [newLat, newLng]
+      ]);
+      setStudentCoords({ lat: newLat, lng: newLng });
+    }, [distanceKm]);
+
+    // GPS Auto-Detection Handler
+    const handleDetectGPS = () => {
+      if (!navigator.geolocation) {
+        setGpsNotice('Fitur GPS tidak didukung di peramban ini.');
+        return;
+      }
+      setGpsLoading(true);
+      setGpsNotice('Mendeteksi koordinat lokasi rumah Anda...');
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const lat = pos.coords.latitude;
+          const lng = pos.coords.longitude;
+          setGpsLoading(false);
+          setGpsNotice('Lokasi GPS berhasil ditemukan!');
+          setTimeout(() => setGpsNotice(''), 4000);
+
+          if (studentMarkerRef.current && mapInstanceRef.current && routeLineRef.current) {
+            isManualMoveRef.current = true;
+            studentMarkerRef.current.setLatLng([lat, lng]);
+            routeLineRef.current.setLatLngs([
+              [teacherLoc.lat, teacherLoc.lng],
+              [lat, lng]
+            ]);
+            mapInstanceRef.current.fitBounds([
+              [teacherLoc.lat, teacherLoc.lng],
+              [lat, lng]
+            ], { padding: [50, 50] });
+            setStudentCoords({ lat, lng });
+            const calcDist = calculateHaversineKm(teacherLoc.lat, teacherLoc.lng, lat, lng);
+            const clampedDist = Math.max(1, Math.min(15, calcDist));
+            setDistanceKm(clampedDist);
+            setTimeout(() => { isManualMoveRef.current = false; }, 120);
+          }
+        },
+        (err) => {
+          setGpsLoading(false);
+          setGpsNotice('Tidak dapat mengakses GPS (' + (err.message || 'Izin belum diberikan') + '). Silakan geser pin manual pada peta.');
+          setTimeout(() => setGpsNotice(''), 6000);
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+      );
+    };
+
+    // Reset Map Pin to default Mertoyudan area
+    const handleResetMap = () => {
+      const defaultLat = teacherLoc.lat + 0.02;
+      const defaultLng = teacherLoc.lng + 0.015;
+      isManualMoveRef.current = true;
+      setStudentCoords({ lat: defaultLat, lng: defaultLng });
+      setDistanceKm(3);
+      if (studentMarkerRef.current && mapInstanceRef.current && routeLineRef.current) {
+        studentMarkerRef.current.setLatLng([defaultLat, defaultLng]);
+        routeLineRef.current.setLatLngs([
+          [teacherLoc.lat, teacherLoc.lng],
+          [defaultLat, defaultLng]
+        ]);
+        mapInstanceRef.current.fitBounds([
+          [teacherLoc.lat, teacherLoc.lng],
+          [defaultLat, defaultLng]
+        ], { padding: [50, 50] });
+      }
+      setTimeout(() => { isManualMoveRef.current = false; }, 120);
+    };
+
+    const googleMapsDirUrl = `https://www.google.com/maps/dir/?api=1&origin=${teacherLoc.lat},${teacherLoc.lng}&destination=${studentCoords.lat},${studentCoords.lng}`;
 
     // Select package handler
     const handleSelectPackageCard = (pkgId) => {
@@ -621,6 +931,70 @@ Apakah jadwal Kak Arsil masih tersedia? Terima kasih.`;
                 ),
                 h('p', { style: { fontSize: '0.78rem', color: '#52434A', marginTop: '6px' } },
                   'Tarif transport: Rp 3.000 / km.'
+                ),
+
+                // Interactive Leaflet Map Box
+                h('div', { className: 'map-interactive-box' },
+                  h('div', { className: 'map-header-bar' },
+                    h('div', { className: 'map-header-title' },
+                      h(IconMapPin),
+                      'Peta Rute Rumah Guru ke Rumah Murid'
+                    ),
+                    h('span', { className: 'map-header-badge' },
+                      `Titik Guru: ${teacherLoc.name || 'Brajan, Magelang'}`
+                    )
+                  ),
+
+                  // Container for Leaflet
+                  h('div', { id: 'distanceMap', className: 'map-container-frame' }),
+
+                  // Action Buttons Toolbar
+                  h('div', { className: 'map-actions-toolbar' },
+                    h('button', {
+                      type: 'button',
+                      className: 'btn-map-action primary',
+                      onClick: handleDetectGPS,
+                      disabled: gpsLoading
+                    },
+                      h(IconCrosshair),
+                      gpsLoading ? 'Mencari GPS...' : 'Lokasi Saya (GPS)'
+                    ),
+                    h('a', {
+                      href: googleMapsDirUrl,
+                      target: '_blank',
+                      rel: 'noopener noreferrer',
+                      className: 'btn-map-action',
+                      title: 'Buka petunjuk arah di aplikasi Google Maps'
+                    },
+                      h(IconRoute),
+                      'Buka di Google Maps'
+                    ),
+                    h('button', {
+                      type: 'button',
+                      className: 'btn-map-action',
+                      onClick: handleResetMap,
+                      title: 'Kembalikan posisi pin ke semula'
+                    },
+                      h(IconRotateCcw),
+                      'Reset Pin'
+                    )
+                  ),
+
+                  gpsNotice && h('div', {
+                    style: {
+                      marginTop: '8px',
+                      fontSize: '0.76rem',
+                      color: 'var(--color-rose-primary)',
+                      fontWeight: 600
+                    }
+                  }, gpsNotice),
+
+                  h('div', { className: 'map-info-strip' },
+                    h(IconCheck),
+                    h('span', null,
+                      'Geser pin biru pada peta atau klik posisi rumah Anda untuk menghitung jarak otomatis. Rumah guru berada di Dusun Brajan, Kab. Magelang.'
+                    )
+                  )
                 )
               ),
 

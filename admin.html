@@ -453,8 +453,8 @@
           <h2 class="admin-section-heading">3. Detail Pilihan Paket A, B, dan C</h2>
           <div id="packagesContainer"></div>
 
-          <!-- 4. JADWAL & TRANSPORT -->
-          <h2 class="admin-section-heading">4. Jadwal & Biaya Transportasi</h2>
+          <!-- 4. JADWAL, LOKASI GURU & TRANSPORT -->
+          <h2 class="admin-section-heading">4. Jadwal, Lokasi Guru & Biaya Transportasi</h2>
           <div class="admin-grid-2">
             <div class="form-group">
               <label class="form-label">Waktu Les</label>
@@ -468,18 +468,46 @@
 
           <div class="admin-grid-2">
             <div class="form-group">
+              <label class="form-label">Nama Lokasi Guru (Singkat)</label>
+              <input type="text" id="teacherLocationName" class="form-input" placeholder="Contoh: Brajan, Kabupaten Magelang" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Alamat Lengkap Titik Berangkat Guru</label>
+              <input type="text" id="teacherLocationAddress" class="form-input" placeholder="Contoh: Dusun Brajan, Danurejo, Kec. Mertoyudan, Kab. Magelang" required>
+            </div>
+          </div>
+
+          <div class="admin-grid-2">
+            <div class="form-group">
+              <label class="form-label">Koordinat Latitude Guru (Garis Lintang)</label>
+              <input type="number" step="0.0001" id="teacherLocationLat" class="form-input" placeholder="-7.5347" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Koordinat Longitude Guru (Garis Bujur)</label>
+              <input type="number" step="0.0001" id="teacherLocationLng" class="form-input" placeholder="110.2255" required>
+            </div>
+          </div>
+
+          <div class="admin-grid-2">
+            <div class="form-group">
               <label class="form-label">Biaya Transport per KM (Rupiah)</label>
               <input type="number" step="500" id="transportFeePerKm" class="form-input" required>
             </div>
             <div class="form-group">
-              <label class="form-label">Catatan Hari Libur / Weekend</label>
-              <input type="text" id="scheduleNote" class="form-input" required>
+              <label class="form-label">Batas Maksimal Radius Jangkauan (KM)</label>
+              <input type="number" step="1" id="teacherLocationMaxRadius" class="form-input" placeholder="15" required>
             </div>
           </div>
 
-          <div class="form-group">
-            <label class="form-label">Keterangan Transportasi</label>
-            <input type="text" id="transportNote" class="form-input">
+          <div class="admin-grid-2">
+            <div class="form-group">
+              <label class="form-label">Catatan Hari Libur / Weekend</label>
+              <input type="text" id="scheduleNote" class="form-input" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Keterangan Transportasi</label>
+              <input type="text" id="transportNote" class="form-input">
+            </div>
           </div>
 
           <!-- 5. KEAMANAN PIN -->
@@ -904,10 +932,16 @@
         avatarUrlInput.value = avatarUrl;
         avatarStatusLabel.textContent = 'Foto Aktif';
 
-        // Schedule & Transport
+        // Location, Schedule & Transport
         var s = data.schedule_info || {};
+        var loc = t.location || {};
         document.getElementById('scheduleTimes').value = s.times || '';
         document.getElementById('scheduleDays').value = s.days || '';
+        document.getElementById('teacherLocationName').value = loc.name || 'Brajan, Kabupaten Magelang';
+        document.getElementById('teacherLocationAddress').value = loc.address || 'Dusun Brajan, Danurejo, Kec. Mertoyudan, Kab. Magelang';
+        document.getElementById('teacherLocationLat').value = (loc.lat !== undefined) ? loc.lat : -7.5347;
+        document.getElementById('teacherLocationLng').value = (loc.lng !== undefined) ? loc.lng : 110.2255;
+        document.getElementById('teacherLocationMaxRadius').value = loc.max_radius_km || 15;
         document.getElementById('transportFeePerKm').value = data.transport_fee_per_km || 3000;
         document.getElementById('scheduleNote').value = s.note || '';
         document.getElementById('transportNote').value = data.transport_note || '';
@@ -1069,7 +1103,14 @@
             updated.teacher.profile.avatar = avatarPreview.src;
           }
 
-          // Schedule & Transport
+          // Location, Schedule & Transport
+          if (!updated.teacher.location) updated.teacher.location = {};
+          updated.teacher.location.name = document.getElementById('teacherLocationName').value.trim() || 'Brajan, Kabupaten Magelang';
+          updated.teacher.location.address = document.getElementById('teacherLocationAddress').value.trim() || 'Dusun Brajan, Danurejo, Kec. Mertoyudan, Kab. Magelang';
+          updated.teacher.location.lat = parseFloat(document.getElementById('teacherLocationLat').value) || -7.5347;
+          updated.teacher.location.lng = parseFloat(document.getElementById('teacherLocationLng').value) || 110.2255;
+          updated.teacher.location.max_radius_km = parseInt(document.getElementById('teacherLocationMaxRadius').value, 10) || 15;
+
           updated.schedule_info.times = document.getElementById('scheduleTimes').value.trim();
           updated.schedule_info.days = document.getElementById('scheduleDays').value.trim();
           updated.schedule_info.note = document.getElementById('scheduleNote').value.trim();

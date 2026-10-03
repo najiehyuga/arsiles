@@ -9,6 +9,13 @@
     "call_to_action": "Yuk, ajak putra/putri Anda mendekatkan diri pada Al-Qur'an",
     "area": "Area Layanan: Home Visit (Datang ke Rumah Murid)",
     "admin_pin": "123456",
+    "location": {
+      "name": "Brajan, Kabupaten Magelang",
+      "address": "Dusun Brajan, Danurejo, Kec. Mertoyudan, Kab. Magelang",
+      "lat": -7.5347,
+      "lng": 110.2255,
+      "max_radius_km": 15
+    },
     "profile": {
       "greeting": "Assalamu'alaikum Ayah & Bunda! Saya Kak Arsil",
       "bio": "Sebagai pengajar Al-Qur'an Muslimah, saya berdedikasi membimbing anak-anak belajar membaca Al-Qur'an dengan sabar, santun, dan telaten. Belajar di rumah sendiri membuat ananda merasa nyaman, fokus, dan gembira menyerap ilmu kalamullah.",

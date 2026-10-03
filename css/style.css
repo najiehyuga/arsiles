@@ -1192,6 +1192,102 @@ a:hover {
   text-align: center;
 }
 
+/* Interactive Distance Map */
+.map-interactive-box {
+  margin-top: 14px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 14px;
+}
+
+.map-header-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.map-teacher-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--color-rose-soft);
+  color: var(--color-rose-primary);
+  border: 1px solid var(--color-rose-border);
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+}
+
+.map-container-frame {
+  height: 240px;
+  width: 100%;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+}
+
+.map-actions-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.btn-map-action {
+  background: #FFFFFF;
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 7px 12px;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 38px;
+  transition: all var(--transition-fast);
+  text-decoration: none;
+}
+
+.btn-map-action:hover {
+  background: var(--color-blue-soft);
+  color: var(--color-blue-primary);
+  border-color: var(--color-blue-border);
+}
+
+.custom-map-pin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+  border: 2.5px solid #FFFFFF;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.custom-map-pin:hover {
+  transform: scale(1.15);
+}
+
+.custom-map-pin.teacher-pin {
+  background: var(--color-rose-primary);
+  color: #FFFFFF;
+}
+
+.custom-map-pin.student-pin {
+  background: var(--color-blue-primary);
+  color: #FFFFFF;
+}
+
 .calc-summary-card {
   background-color: var(--color-bg);
   border: 1px solid var(--color-border);
@@ -1652,3 +1748,184 @@ a:hover {
     padding: 6px 12px;
   }
 }
+
+/* ==========================================================================
+   Interactive Distance Map Component (Leaflet)
+   ========================================================================== */
+
+.map-interactive-box {
+  margin-top: 14px;
+  background: #FFFFFF;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+}
+
+.map-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.map-header-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.map-header-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  background: var(--color-rose-soft);
+  color: var(--color-rose-primary);
+  border: 1px solid var(--color-rose-border);
+}
+
+.map-container-frame {
+  width: 100%;
+  height: 290px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  position: relative;
+  z-index: 1;
+  background: #f0ede8;
+}
+
+/* Leaflet Container Overrides */
+.map-container-frame .leaflet-container {
+  width: 100%;
+  height: 100%;
+  font-family: inherit;
+}
+
+.map-container-frame .leaflet-control-zoom {
+  border: none !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15) !important;
+}
+
+.map-container-frame .leaflet-control-zoom a {
+  background-color: #FFFFFF !important;
+  color: var(--color-text) !important;
+  border-bottom: 1px solid var(--color-border) !important;
+  width: 32px !important;
+  height: 32px !important;
+  line-height: 32px !important;
+}
+
+/* Custom DivIcon Markers */
+.leaflet-div-icon.custom-pin-wrapper {
+  background: transparent !important;
+  border: none !important;
+}
+
+.custom-map-pin {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: grab;
+  user-select: none;
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.28));
+  transition: transform 0.15s ease;
+}
+
+.custom-map-pin:active {
+  cursor: grabbing;
+  transform: scale(1.1);
+}
+
+.custom-map-pin .pin-label {
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  margin-bottom: 2px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+}
+
+.custom-map-pin.teacher .pin-label {
+  background-color: var(--color-rose-primary);
+  color: #FFFFFF;
+}
+
+.custom-map-pin.student .pin-label {
+  background-color: var(--color-blue-primary);
+  color: #FFFFFF;
+}
+
+.custom-map-pin .pin-svg {
+  display: block;
+}
+
+/* Map Action Buttons */
+.map-actions-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.btn-map-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  min-height: 38px;
+  text-decoration: none;
+}
+
+.btn-map-action:hover {
+  background-color: var(--color-rose-soft);
+  color: var(--color-rose-primary);
+  border-color: var(--color-rose-border);
+}
+
+.btn-map-action.primary {
+  background-color: var(--color-blue-soft);
+  color: var(--color-blue-primary);
+  border-color: var(--color-blue-border);
+}
+
+.btn-map-action.primary:hover {
+  background-color: var(--color-blue-primary);
+  color: #FFFFFF;
+}
+
+.map-info-strip {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin-top: 8px;
+  font-size: 0.76rem;
+  color: #52434A;
+  line-height: 1.45;
+}
+
+.map-info-strip svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+  color: var(--color-rose-primary);
+}
+

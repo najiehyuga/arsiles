@@ -18,6 +18,8 @@ if (file_exists($dataFile)) {
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   
+  <!-- Leaflet Map CSS for Interactive Distance Calculation -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
   <link rel="stylesheet" href="css/style.css?v=<?php echo time(); ?>">
 </head>
 <body>
@@ -52,6 +54,11 @@ if (file_exists($dataFile)) {
   <!-- React 18 & Application Scripts (Loaded from local vendor for offline reliability) -->
   <script src="js/vendor/react.min.js"></script>
   <script src="js/vendor/react-dom.min.js"></script>
+  <!-- Supabase Cloud Adapter -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <!-- Leaflet Map Library for Distance Calculation -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script src="js/petals.js?v=<?php echo time(); ?>"></script>
   <script src="js/app.js?v=<?php echo time(); ?>"></script>
 </body>

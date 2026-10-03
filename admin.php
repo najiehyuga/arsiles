@@ -280,9 +280,6 @@ $currentAvatar = $data['teacher']['profile']['avatar'] ?? 'assets/kak-arsil-prof
         <div class="form-group" style="text-align: left;">
           <label class="form-label" for="pinInput">Masukkan PIN Keamanan</label>
           <input type="password" id="pinInput" name="pin" class="form-input" style="text-align:center;font-size:1.25rem;letter-spacing:0.25em;" placeholder="••••••" autofocus required>
-          <p style="font-size:0.75rem;color:var(--color-text-muted);margin-top:6px;text-align:center;">
-            (PIN standar bawaan: <strong>123456</strong>)
-          </p>
         </div>
         <button type="submit" class="btn-primary-hero" style="width: 100%; justify-content: center; margin-top: 10px; cursor: pointer; border: none;">
           Masuk ke Panel Pengajar
@@ -481,6 +478,80 @@ $currentAvatar = $data['teacher']['profile']['avatar'] ?? 'assets/kak-arsil-prof
             <label class="form-label">PIN Baru (Kosongkan jika tidak ingin mengubah)</label>
             <input type="password" name="new_pin" class="form-input" placeholder="Misal: 6 angka">
           </div>
+
+          <!-- SUBMIT BUTTON -->
+          <div style="margin-top: 28px; padding-top: 18px; border-top: 1px solid var(--color-border); display: flex; gap: 12px; align-items: center;">
+            <button type="submit" class="btn-primary-hero" style="cursor: pointer; border: none;">
+              Simpan Perubahan
+            </button>
+            <a href="index.php" class="btn-outline-hero" style="min-height: 44px; display: inline-flex; align-items: center;">
+              Batal
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Script for Live Image Preview -->
+    <script>
+      (function() {
+        var input = document.getElementById('avatarInput');
+        var preview = document.getElementById('avatarPreview');
+        var urlInput = document.getElementById('avatarUrlInput');
+        var resetCheck = document.getElementById('resetAvatarCheck');
+        var statusLabel = document.getElementById('avatarStatusLabel');
+        var defaultAvatar = 'assets/kak-arsil-profile.jpg';
+
+        if (input && preview) {
+          input.addEventListener('change', function() {
+            var file = this.files[0];
+            if (file) {
+              if (file.size > 5 * 1024 * 1024) {
+                alert('Peringatan: Ukuran file melebihi batas 5 MB. Harap gunakan foto dengan ukuran lebih kecil.');
+                this.value = '';
+                return;
+              }
+              var reader = new FileReader();
+              reader.onload = function(e) {
+                preview.src = e.target.result;
+                if (statusLabel) statusLabel.textContent = 'Pratinjau File Baru';
+                if (resetCheck) resetCheck.checked = false;
+              };
+              reader.readAsDataURL(file);
+            }
+          });
+        }
+
+        if (urlInput && preview) {
+          urlInput.addEventListener('input', function() {
+            var val = this.value.trim();
+            if (val.length > 5 && (!input.files || input.files.length === 0)) {
+              preview.src = val;
+              if (statusLabel) statusLabel.textContent = 'Pratinjau dari URL';
+              if (resetCheck) resetCheck.checked = false;
+            }
+          });
+        }
+
+        if (resetCheck && preview) {
+          resetCheck.addEventListener('change', function() {
+            if (this.checked) {
+              preview.src = defaultAvatar;
+              if (input) input.value = '';
+              if (urlInput) urlInput.value = defaultAvatar;
+              if (statusLabel) statusLabel.textContent = 'Foto Bawaan';
+            } else {
+              if (statusLabel) statusLabel.textContent = 'Foto Aktif';
+            }
+          });
+        }
+      })();
+    </script>
+  <?php endif; ?>
+
+</body>
+</html>
+</div>
 
           <!-- SUBMIT BUTTON -->
           <div style="margin-top: 28px; padding-top: 18px; border-top: 1px solid var(--color-border); display: flex; gap: 12px; align-items: center;">
