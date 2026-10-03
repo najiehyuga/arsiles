@@ -118,10 +118,19 @@
     .status-badge.connected {
       background: #EBF6EE;
       color: #1A6330;
+      border: 1px solid #B8E4C4;
     }
     .status-badge.offline {
       background: #FFF4E5;
       color: #8F5700;
+      border: 1px solid #F5D3A6;
+      cursor: pointer;
+    }
+    .status-badge.error {
+      background: #FDF0F2;
+      color: #B32442;
+      border: 1px solid #F5C6D0;
+      cursor: pointer;
     }
     @media (max-width: 640px) {
       .admin-grid-2 {
@@ -488,40 +497,72 @@
       });
 
       // Update Supabase connection badge status
-      function updateBadgeStatus(connected, message) {
-        if (connected) {
+      function updateBadgeStatus(type, message) {
+        if (type === 'connected') {
           supabaseStatusBadge.className = 'status-badge connected';
           supabaseStatusBadge.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> ' + (message || 'Terhubung ke Supabase Cloud');
+        } else if (type === 'error') {
+          supabaseStatusBadge.className = 'status-badge error';
+          supabaseStatusBadge.title = 'Klik untuk membuka pengaturan koneksi Supabase';
+          supabaseStatusBadge.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> ' + (message || 'Gagal Terhubung ke Supabase (Klik di sini)');
+        } else if (type === 'checking') {
+          supabaseStatusBadge.className = 'status-badge offline';
+          supabaseStatusBadge.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg> ' + (message || 'Memeriksa koneksi Supabase...');
         } else {
           supabaseStatusBadge.className = 'status-badge offline';
-          supabaseStatusBadge.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg> ' + (message || 'Menggunakan Data Lokal (Supabase belum disetting)');
+          supabaseStatusBadge.title = 'Klik untuk membuka pengaturan koneksi Supabase';
+          supabaseStatusBadge.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg> ' + (message || 'Data Lokal (Supabase belum dihubungkan)');
         }
       }
+
+      // Klik badge status untuk langsung membuka panel konfigurasi
+      supabaseStatusBadge.addEventListener('click', function () {
+        supabaseSetupCard.style.display = 'block';
+        supabaseUrlInput.value = window.ArsilSupabase.getUrl();
+        supabaseKeyInput.value = window.ArsilSupabase.getKey();
+        supabaseUrlInput.focus();
+      });
 
       // Load initial data
       async function loadDashboardData() {
         var data = null;
 
-        // Coba dari Supabase terlebih dahulu
+        // Coba dari Supabase terlebih dahulu jika sudah dikonfigurasi
         if (window.ArsilSupabase.isConfigured()) {
+          updateBadgeStatus('checking', 'Memeriksa koneksi Supabase...');
           try {
-            data = await window.ArsilSupabase.fetchSiteData();
-            if (data) {
-              updateBadgeStatus(true);
+            var client = window.ArsilSupabase.getClient();
+            if (client) {
+              var res = await client
+                .from('site_settings')
+                .select('content')
+                .eq('id', 'arsiles_main')
+                .single();
+
+              if (res.data && res.data.content) {
+                data = res.data.content;
+                updateBadgeStatus('connected', 'Terhubung ke Supabase Cloud');
+              } else if (res.error) {
+                console.warn('Supabase fetch error:', res.error);
+                updateBadgeStatus('error', 'Koneksi gagal: ' + (res.error.message || 'Tabel belum ada'));
+              }
+            } else {
+              updateBadgeStatus('error', 'Konfigurasi URL/Key Supabase tidak valid');
             }
           } catch (e) {
             console.warn('Gagal memuat dari Supabase:', e);
+            updateBadgeStatus('error', 'Gagal koneksi: ' + (e.message || 'Error'));
           }
+        } else {
+          // Belum diisi URL / Key
+          updateBadgeStatus('offline', 'Data Lokal (Supabase belum dihubungkan)');
         }
 
-        // Fallback jika belum disetting atau offline: ambil dari data.json
+        // Fallback jika belum disetting atau offline atau error: ambil dari data.json
         if (!data) {
           try {
             var res = await fetch('data.json?v=' + Date.now());
             data = await res.json();
-            if (!window.ArsilSupabase.isConfigured()) {
-              updateBadgeStatus(false, 'Supabase belum dihubungkan (Klik tombol Koneksi)');
-            }
           } catch (e) {
             console.error('Gagal membaca data.json:', e);
           }
