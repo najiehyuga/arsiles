@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
@@ -7,7 +8,9 @@
   <meta name="robots" content="noindex, nofollow">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
   <style>
     .admin-container {
@@ -15,6 +18,7 @@
       margin: 36px auto;
       padding: 0 20px;
     }
+
     .admin-card {
       background: #FFFFFF;
       border: 1px solid var(--color-border);
@@ -23,6 +27,7 @@
       box-shadow: var(--shadow-sm);
       margin-bottom: 24px;
     }
+
     .admin-header-bar {
       display: flex;
       align-items: center;
@@ -33,16 +38,19 @@
       flex-wrap: wrap;
       gap: 12px;
     }
+
     .admin-title {
       font-size: 1.4rem;
       color: var(--color-text);
       font-weight: 700;
     }
+
     .admin-grid-2 {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 16px;
     }
+
     .admin-section-heading {
       font-size: 1.1rem;
       color: var(--color-rose-primary);
@@ -51,6 +59,7 @@
       border-bottom: 1px dashed var(--color-border);
       font-weight: 700;
     }
+
     .alert-box {
       padding: 12px 16px;
       border-radius: var(--radius-sm);
@@ -58,21 +67,25 @@
       font-weight: 600;
       font-size: 0.9rem;
     }
+
     .alert-success {
       background-color: #EBF6EE;
       color: #1A6330;
       border: 1px solid #B8E4C4;
     }
+
     .alert-danger {
       background-color: #FDF0F2;
       color: #B32442;
       border: 1px solid #F5C6D0;
     }
+
     .alert-info {
       background-color: #EDF5F9;
       color: #1D5676;
       border: 1px solid #C4DCE8;
     }
+
     .avatar-upload-box {
       background: var(--color-bg);
       border: 1px solid var(--color-border);
@@ -80,12 +93,14 @@
       padding: 18px;
       margin-bottom: 18px;
     }
+
     .avatar-upload-inner {
       display: flex;
       align-items: center;
       gap: 20px;
       flex-wrap: wrap;
     }
+
     .avatar-thumb-img {
       width: 110px;
       height: 110px;
@@ -96,6 +111,7 @@
       display: block;
       background-color: #FFFFFF;
     }
+
     .login-box {
       max-width: 380px;
       margin: 80px auto;
@@ -106,6 +122,7 @@
       text-align: center;
       box-shadow: var(--shadow-card);
     }
+
     .status-badge {
       display: inline-flex;
       align-items: center;
@@ -115,31 +132,37 @@
       font-size: 0.78rem;
       font-weight: 600;
     }
+
     .status-badge.connected {
       background: #EBF6EE;
       color: #1A6330;
       border: 1px solid #B8E4C4;
     }
+
     .status-badge.offline {
       background: #FFF4E5;
       color: #8F5700;
       border: 1px solid #F5D3A6;
       cursor: pointer;
     }
+
     .status-badge.error {
       background: #FDF0F2;
       color: #B32442;
       border: 1px solid #F5C6D0;
       cursor: pointer;
     }
+
     @media (max-width: 640px) {
       .admin-grid-2 {
         grid-template-columns: 1fr;
         gap: 12px;
       }
+
       .admin-card {
         padding: 20px 16px;
       }
+
       .avatar-thumb-img {
         width: 90px;
         height: 90px;
@@ -151,12 +174,17 @@
   <!-- Config script -->
   <script src="js/supabase-config.js"></script>
 </head>
+
 <body>
 
   <!-- 1. LOGIN SCREEN -->
   <div id="loginView" class="login-box" style="display: none;">
-    <div style="width: 44px; height: 44px; border-radius: 50%; background: var(--color-rose-soft); color: var(--color-rose-primary); display: flex; align-items: center; justify-content: center; margin: 0 auto 14px;">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+    <div
+      style="width: 44px; height: 44px; border-radius: 50%; background: var(--color-rose-soft); color: var(--color-rose-primary); display: flex; align-items: center; justify-content: center; margin: 0 auto 14px;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+      </svg>
     </div>
     <h1 class="admin-title" style="margin-bottom: 6px;">Area Pengajar</h1>
     <p style="font-size: 0.86rem; color: var(--color-text-muted); margin-bottom: 20px;">
@@ -168,12 +196,11 @@
     <form id="loginForm">
       <div class="form-group" style="text-align: left;">
         <label class="form-label" for="pinInput">Masukkan PIN Keamanan</label>
-        <input type="password" id="pinInput" name="pin" class="form-input" style="text-align:center;font-size:1.25rem;letter-spacing:0.25em;" placeholder="••••••" autofocus required>
-        <p style="font-size:0.75rem;color:var(--color-text-muted);margin-top:6px;text-align:center;">
-          (PIN standar bawaan: <strong>123456</strong>)
-        </p>
+        <input type="password" id="pinInput" name="pin" class="form-input"
+          style="text-align:center;font-size:1.25rem;letter-spacing:0.25em;" placeholder="••••••" autofocus required>
       </div>
-      <button type="submit" class="btn-primary-hero" style="width: 100%; justify-content: center; margin-top: 10px; cursor: pointer; border: none;">
+      <button type="submit" class="btn-primary-hero"
+        style="width: 100%; justify-content: center; margin-top: 10px; cursor: pointer; border: none;">
         Masuk ke Panel Pengajar
       </button>
       <div style="margin-top: 16px;">
@@ -193,19 +220,24 @@
           </p>
           <div style="margin-top: 8px;">
             <span id="supabaseStatusBadge" class="status-badge offline">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+              </svg>
               <span>Memeriksa koneksi database...</span>
             </span>
           </div>
         </div>
         <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-          <button type="button" id="openConfigBtn" class="btn-outline-hero" style="font-size: 0.84rem; padding: 8px 14px; min-height: 38px; color: var(--color-blue-primary); border-color: var(--color-blue-border);">
+          <button type="button" id="openConfigBtn" class="btn-outline-hero"
+            style="font-size: 0.84rem; padding: 8px 14px; min-height: 38px; color: var(--color-blue-primary); border-color: var(--color-blue-border);">
             Koneksi Supabase
           </button>
-          <a href="index.html" target="_blank" class="btn-outline-hero" style="font-size: 0.84rem; padding: 8px 14px; min-height: 38px;">
+          <a href="index.html" target="_blank" class="btn-outline-hero"
+            style="font-size: 0.84rem; padding: 8px 14px; min-height: 38px;">
             Lihat Website
           </a>
-          <button type="button" id="logoutBtn" class="btn-outline-hero" style="font-size: 0.84rem; padding: 8px 14px; min-height: 38px; color: #B32442; border-color: #F5C6D0;">
+          <button type="button" id="logoutBtn" class="btn-outline-hero"
+            style="font-size: 0.84rem; padding: 8px 14px; min-height: 38px; color: #B32442; border-color: #F5C6D0;">
             Keluar
           </button>
         </div>
@@ -215,25 +247,31 @@
       <div id="supabaseSetupCard" class="alert-box alert-info" style="display: none;">
         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
           <strong style="font-size: 0.95rem;">Hubungkan ke Database Cloud Supabase</strong>
-          <button type="button" id="closeSetupBtn" style="background: none; border: none; font-size: 1rem; cursor: pointer; color: var(--color-text-muted);">&times;</button>
+          <button type="button" id="closeSetupBtn"
+            style="background: none; border: none; font-size: 1rem; cursor: pointer; color: var(--color-text-muted);">&times;</button>
         </div>
         <p style="font-size: 0.84rem; margin-bottom: 12px; font-weight: normal; line-height: 1.5;">
-          Masukkan Project URL dan Anon Public Key dari dashboard Supabase Anda (Project Settings &rarr; API) agar data website tersimpan online di Vercel:
+          Masukkan Project URL dan Anon Public Key dari dashboard Supabase Anda (Project Settings &rarr; API) agar data
+          website tersimpan online di Vercel:
         </p>
         <div style="display: flex; flex-direction: column; gap: 10px;">
           <div>
             <label style="font-size: 0.78rem; font-weight: 700;">Supabase Project URL:</label>
-            <input type="text" id="supabaseUrlInput" class="form-input" placeholder="https://xxxxxxxx.supabase.co" style="background: #FFFFFF;">
+            <input type="text" id="supabaseUrlInput" class="form-input" placeholder="https://xxxxxxxx.supabase.co"
+              style="background: #FFFFFF;">
           </div>
           <div>
             <label style="font-size: 0.78rem; font-weight: 700;">Supabase Anon Public Key:</label>
-            <input type="text" id="supabaseKeyInput" class="form-input" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." style="background: #FFFFFF;">
+            <input type="text" id="supabaseKeyInput" class="form-input"
+              placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." style="background: #FFFFFF;">
           </div>
           <div style="display: flex; gap: 8px; margin-top: 4px;">
-            <button type="button" id="saveSupabaseConfigBtn" class="btn-primary-hero" style="font-size: 0.84rem; padding: 6px 16px; border: none; cursor: pointer;">
+            <button type="button" id="saveSupabaseConfigBtn" class="btn-primary-hero"
+              style="font-size: 0.84rem; padding: 6px 16px; border: none; cursor: pointer;">
               Simpan & Hubungkan
             </button>
-            <button type="button" id="testSupabaseBtn" class="btn-outline-hero" style="font-size: 0.84rem; padding: 6px 14px; min-height: 34px;">
+            <button type="button" id="testSupabaseBtn" class="btn-outline-hero"
+              style="font-size: 0.84rem; padding: 6px 14px; min-height: 34px;">
               Tes Koneksi
             </button>
           </div>
@@ -247,31 +285,41 @@
         <h2 class="admin-section-heading">1. Informasi & Profil Kak Arsil</h2>
 
         <div class="avatar-upload-box">
-          <label class="form-label" style="font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+          <label class="form-label"
+            style="font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
             <span>Foto Profil Pengajar</span>
-            <span style="font-size: 0.78rem; font-weight: normal; color: var(--color-rose-primary);">Rasio disarankan 1:1 (persegi)</span>
+            <span style="font-size: 0.78rem; font-weight: normal; color: var(--color-rose-primary);">Rasio disarankan
+              1:1 (persegi)</span>
           </label>
           <div class="avatar-upload-inner">
             <div style="text-align: center;">
-              <img id="avatarPreview" src="assets/kak-arsil-profile.jpg" alt="Pratinjau Foto Profil" class="avatar-thumb-img">
-              <span id="avatarStatusLabel" style="display: block; font-size: 0.72rem; color: var(--color-text-muted); margin-top: 6px;">Foto Aktif</span>
+              <img id="avatarPreview" src="assets/kak-arsil-profile.jpg" alt="Pratinjau Foto Profil"
+                class="avatar-thumb-img">
+              <span id="avatarStatusLabel"
+                style="display: block; font-size: 0.72rem; color: var(--color-text-muted); margin-top: 6px;">Foto
+                Aktif</span>
             </div>
             <div style="flex: 1; min-width: 220px;">
-              <label for="avatarInput" class="form-label" style="font-size: 0.84rem; font-weight: 600; color: var(--color-text); margin-bottom: 4px;">
+              <label for="avatarInput" class="form-label"
+                style="font-size: 0.84rem; font-weight: 600; color: var(--color-text); margin-bottom: 4px;">
                 1. Pilih File Foto Baru dari Perangkat (Base64)
               </label>
-              <input type="file" id="avatarInput" accept="image/png, image/jpeg, image/jpg, image/webp" class="form-input" style="padding: 7px; background: #FFFFFF;">
+              <input type="file" id="avatarInput" accept="image/png, image/jpeg, image/jpg, image/webp"
+                class="form-input" style="padding: 7px; background: #FFFFFF;">
               <p style="font-size: 0.76rem; color: var(--color-text-muted); margin-top: 4px; margin-bottom: 12px;">
                 Mendukung format JPG, PNG, atau WebP (disarankan di bawah 2 MB).
               </p>
 
-              <label for="avatarUrlInput" class="form-label" style="font-size: 0.84rem; font-weight: 600; color: var(--color-text); margin-bottom: 4px;">
+              <label for="avatarUrlInput" class="form-label"
+                style="font-size: 0.84rem; font-weight: 600; color: var(--color-text); margin-bottom: 4px;">
                 2. Atau Masukkan URL / Path Gambar Langsung
               </label>
-              <input type="text" id="avatarUrlInput" class="form-input" placeholder="assets/kak-arsil-profile.jpg atau https://..." style="background: #FFFFFF;">
+              <input type="text" id="avatarUrlInput" class="form-input"
+                placeholder="assets/kak-arsil-profile.jpg atau https://..." style="background: #FFFFFF;">
 
               <div style="margin-top: 10px; padding-top: 8px; border-top: 1px dashed var(--color-border);">
-                <label style="font-size: 0.82rem; color: var(--color-text-muted); cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+                <label
+                  style="font-size: 0.82rem; color: var(--color-text-muted); cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
                   <input type="checkbox" id="resetAvatarCheck">
                   Kembalikan ke foto ilustrasi bawaan sistem
                 </label>
@@ -367,11 +415,13 @@
         </div>
 
         <!-- SUBMIT BUTTON -->
-        <div style="margin-top: 28px; padding-top: 18px; border-top: 1px solid var(--color-border); display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+        <div
+          style="margin-top: 28px; padding-top: 18px; border-top: 1px solid var(--color-border); display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
           <button type="submit" id="saveDataBtn" class="btn-primary-hero" style="cursor: pointer; border: none;">
             Simpan Perubahan
           </button>
-          <a href="index.html" class="btn-outline-hero" style="min-height: 44px; display: inline-flex; align-items: center;">
+          <a href="index.html" class="btn-outline-hero"
+            style="min-height: 44px; display: inline-flex; align-items: center;">
             Kembali ke Beranda
           </a>
         </div>
@@ -621,7 +671,7 @@
         (data.levels || []).forEach(function (lvl, lIdx) {
           var box = document.createElement('div');
           box.style.cssText = 'background: var(--color-bg); padding: 14px 16px; border-radius: var(--radius-sm); margin-bottom: 12px; border: 1px solid var(--color-border);';
-          
+
           var title = document.createElement('div');
           title.style.cssText = 'font-weight: 700; color: var(--color-text); margin-bottom: 8px; font-size: 0.95rem;';
           title.textContent = lvl.title + ' (' + lvl.subtitle + ')';
@@ -819,7 +869,7 @@
             if (phpRes.ok) {
               savedToPhp = true;
             }
-          } catch (_) {}
+          } catch (_) { }
 
           currentData = updated;
 
@@ -850,4 +900,5 @@
     })();
   </script>
 </body>
+
 </html>
