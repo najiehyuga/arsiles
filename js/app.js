@@ -161,8 +161,8 @@
       const cNotes = notes.trim() ? notes.trim() : '-';
       const waNumber = data.teacher.whatsapp || '6281234567890';
 
-      const message = 
-`Assalamu'alaikum Kak Arsil, saya ingin mendaftarkan les private ngaji home visit untuk ananda:
+      const message =
+        `Assalamu'alaikum Kak Arsil, saya ingin mendaftarkan les private ngaji home visit untuk ananda:
 
 - Nama Murid: ${cName}
 - Jenjang: ${calculation.levelTitle}
@@ -261,14 +261,14 @@ Apakah jadwal Kak Arsil masih tersedia? Terima kasih.`;
             },
               mobileMenuOpen
                 ? h('svg', { width: 22, height: 22, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2 },
-                    h('line', { x1: 18, y1: 6, x2: 6, y2: 18 }),
-                    h('line', { x1: 6, y1: 6, x2: 18, y2: 18 })
-                  )
+                  h('line', { x1: 18, y1: 6, x2: 6, y2: 18 }),
+                  h('line', { x1: 6, y1: 6, x2: 18, y2: 18 })
+                )
                 : h('svg', { width: 22, height: 22, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2 },
-                    h('line', { x1: 3, y1: 12, x2: 21, y2: 12 }),
-                    h('line', { x1: 3, y1: 6, x2: 21, y2: 6 }),
-                    h('line', { x1: 3, y1: 18, x2: 21, y2: 18 })
-                  )
+                  h('line', { x1: 3, y1: 12, x2: 21, y2: 12 }),
+                  h('line', { x1: 3, y1: 6, x2: 21, y2: 6 }),
+                  h('line', { x1: 3, y1: 18, x2: 21, y2: 18 })
+                )
             )
           )
         )
@@ -802,7 +802,7 @@ Apakah jadwal Kak Arsil masih tersedia? Terima kasih.`;
               'PIN salah. Silakan coba lagi.'
             ),
             h('div', { className: 'admin-modal-btns' },
-              h('button', { type: 'submit', className: 'btn-pin-submit' }, 'Buka Editor'),
+              h('button', { type: 'submit', className: 'btn-pin-submit' }, 'Login'),
               h('button', {
                 type: 'button',
                 className: 'btn-pin-cancel',
